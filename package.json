@@ -5,7 +5,7 @@
   "type": "module",
   "description": "GitHub Pages hub for the XploreSim FRC match simulators (2026 REBUILT + 2025 REEFSCAPE), bound to xploresim.salmoncat0304.xyz",
   "scripts": {
-    "check": "node scripts/check.mjs",
+    "check": "node scripts/check.mjs && node scripts/check_style.mjs",
     "serve": "node --input-type=module -e \"import{createServer}from'node:http';import{readFile}from'node:fs/promises';const T={'.html':'text/html; charset=utf-8','.css':'text/css'};createServer(async(r,s)=>{try{let p=r.url.split('?')[0];if(p==='/'||p==='')p='/index.html';const b=await readFile('.'+p);s.writeHead(200,{'content-type':T[p.endsWith('.html')?'.html':'']||'application/octet-stream'}).end(b);}catch{s.writeHead(404).end('not found');}}).listen(4190,()=>console.log('hub preview: http://127.0.0.1:4190/'))\""
   }
 }

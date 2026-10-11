@@ -16,6 +16,12 @@ index.html   单文件页面，内联 CSS 与 SVG，零 JS、零外部字体、�
 CNAME        xploresim.salmoncat0304.xyz，GitHub Pages 读它来绑定自定义域名
 .nojekyll    跳过 Jekyll 处理
 404.html     Pages 的 404 页，复用同一主题
+scripts/     check.mjs（链接、数字、CNAME、可达性）与 check_style.mjs（样式表与类名互查）
+```
+
+```
+npm run check    # 全部静态守卫 + 两个赛季站点的 200 检查
+SKIP_NET=1 npm run check   # 只跑静态部分
 ```
 
 ## 域名
