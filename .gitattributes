@@ -1,0 +1,3 @@
+# CRLF in a CNAME file makes GitHub Pages read the domain with a trailing \r and
+# the binding silently fails. Keep every served byte LF everywhere.
+* text=auto eol=lf
