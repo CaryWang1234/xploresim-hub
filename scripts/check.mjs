@@ -28,6 +28,13 @@ for (const [f, html] of Object.entries(src)) {
     assert.equal(Buffer.from(html, 'utf8').toString('utf8'), html, 'round-trip mismatch');
   });
 
+  await check(`${f}: English only`, () => {
+    // The page is written for readers outside the Chinese-font fallback chain, so a stray CJK character is
+    // a bug in the copy, not a font problem: match ideographs and CJK punctuation, not § or the em dash.
+    const cjk = html.match(/[\u3000-\u303f\u4e00-\u9fff\uff01-\uff5e]/g);
+    assert.equal(cjk, null, `CJK text found: ${[...new Set(cjk || [])].join(' ')}`);
+  });
+
   await check(`${f}: every external link is https and opens safely`, () => {
     for (const m of html.matchAll(/<a [^>]*href="(http[^"]+)"/g)) {
       assert.match(m[1], /^https:\/\//, `not https: ${m[1]}`);
@@ -62,13 +69,34 @@ await check('index.html: both season entry points are present', () => {
   assert.equal((src['index.html'].match(/class="go"/g) || []).length, 2, 'expected 2 entry buttons');
 });
 
-await check('index.html: the figures it states are the source repos\' figures', () => {
-  // 2026: README.md of XploreSim_dev. 2025: reefscape/README.md + its calibration note.
-  for (const n of ['627', '615.7', '79.7', 'n=96', '276', '271.4', '87.4', '48'])
-    assert.ok(src['index.html'].includes(n), `missing ${n}`);
-  // The 2025 page must not be sold as a planner: its build has no search layer.
-  assert.doesNotMatch(src['index.html'], /REEFSCAPE[^<]*规划器可用/);
-  assert.match(src['index.html'], /规划器 = Stage 2/);
+await check('index.html: the figures it states are the source repos\' figures', async () => {
+  // The hub is a signpost, so its numbers are only honest if the repos beside it still print them.
+  // Each pair is [source README, the figures the hub copies from it]; a figure that drifted on either
+  // side fails here rather than living on the front page.
+  const SOURCES = [
+    ['../../XploreSim_dev/README.md', ['627', '615.7', '79.7', 'n=96']],
+    ['../../XploreSim_dev/reefscape/README.md', ['316.5', '316.6', '146.6', '12.2', '59.1', '58.9', '260.56', '50650675', '12180c55']],
+  ];
+  for (const [from, nums] of SOURCES) {
+    let text;
+    try {
+      text = await readFile(new URL(from, import.meta.url), 'utf8');
+    } catch {
+      // Cloning the hub alone is legitimate, so say what was not checked instead of failing on it.
+      console.log(`       (not checked: ${from} is not checked out beside the hub)`);
+      continue;
+    }
+    for (const n of nums) {
+      assert.ok(src['index.html'].includes(n), `the hub does not print ${n}`);
+      assert.ok(text.includes(n), `${n} is on the hub but not in ${from} — one of the two drifted`);
+    }
+  }
+  // Stage 2 shipped, so the hub must not still carry the "planner is Stage 2" placeholder. What it must also
+  // keep saying is the unfavourable half of the result: the planner reproduces the best fixed rule, it does
+  // not beat it. If that qualifier ever disappears from the front page, the card is selling something the
+  // measurements do not support.
+  assert.doesNotMatch(src['index.html'], /planner = Stage 2/);
+  assert.match(src['index.html'], /only reproduces the best fixed rule/);
 });
 
 await check('CNAME points at the domain this page is bound to', async () => {

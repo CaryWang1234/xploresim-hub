@@ -40,3 +40,7 @@ GitHub 看到 CNAME 文件后自动签发 HTTPS 证书。仓库设置里 Enforce
 
 - 2026：`CaryWang1234/XploreSim_dev` 的 `README.md`（校准锚 `2026cmptx`、镜像 615.7、AI 79.7% n=96）
 - 2025：XploreSim_dev 仓库内 gitignore 掉的 `reefscape/` 同目录项目，其 `README.md` 与 `web/index.html` 的 Stage 1 说明
+
+页面正文只写英文，`npm run check` 里有一条 CJK 守卫盯这件事。两张赛场图按手册尺寸等比绘制（2026 用
+`§5.2–§5.9` 的 651.2 × 317.7 in，2025 用 `§5.1–§5.7` 的 690 × 317 in），坐标取自两个仓库各自的 GEO 常量，
+不是手绘示意；图下方标了比例来源。

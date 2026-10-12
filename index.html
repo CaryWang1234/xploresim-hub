@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>XploreSim · FRC 两赛季推演台</title>
-<meta name="description" content="XploreSim：FRC 比赛模拟器与战术推演台的中心页，收录 2026 REBUILT 与 2025 REEFSCAPE 两个赛季。纯浏览器运行，规则常量紧邻手册条款，页面上的每个数字都可复现。">
+<title>XploreSim · FRC match simulators for two seasons</title>
+<meta name="description" content="XploreSim: the hub for two FRC match simulators and tactical planners — 2026 REBUILT and 2025 REEFSCAPE. Runs entirely in the browser, every rule constant sits next to its manual clause, and every figure on the page is reproducible.">
 <meta name="theme-color" content="#0b1017">
-<meta property="og:title" content="XploreSim · FRC 两赛季推演台">
-<meta property="og:description" content="2026 REBUILT 与 2025 REEFSCAPE 的比赛模拟器：0.1 秒 tick 引擎、画布球场回放、逐段战术搜索。">
+<meta property="og:title" content="XploreSim · FRC match simulators for two seasons">
+<meta property="og:description" content="Simulators for the 2026 REBUILT and 2025 REEFSCAPE games: a 0.1 s tick engine, a canvas field you can scrub, and a segment-by-segment tactical search.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1017'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23ffd94a' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23ffd94a'/%3E%3C/svg%3E">
 <style>
@@ -28,7 +28,7 @@
   --algae: #4ec08a;
   --good: #46c98b;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  --sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --sans: "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 24px 48px -28px rgba(0, 0, 0, .75);
   --wrap: 1080px;
 }
@@ -117,7 +117,6 @@ h1 {
   letter-spacing: -.022em;
   font-weight: 700;
 }
-h1 .cn { display: block; font-size: clamp(17px, 3.1vw, 23px); letter-spacing: .04em; font-weight: 500; color: var(--dim); margin-top: 14px; }
 
 .lede { max-width: 62ch; color: var(--dim); margin-top: 20px; }
 .lede strong { color: var(--text); font-weight: 600; }
@@ -194,7 +193,6 @@ h1 .cn { display: block; font-size: clamp(17px, 3.1vw, 23px); letter-spacing: .0
   letter-spacing: .02em;
   font-weight: 600;
 }
-.game .zh { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--dim); letter-spacing: .02em; margin-left: 6px; }
 
 .diagram {
   margin: 16px 0 4px;
@@ -208,7 +206,15 @@ h1 .cn { display: block; font-size: clamp(17px, 3.1vw, 23px); letter-spacing: .0
 .diagram svg { display: block; width: 100%; height: auto; }
 .diagram .f { fill: none; stroke: var(--line-hi); }
 .diagram .l { stroke: var(--tone); fill: none; }
-.diagram text { font-family: var(--mono); font-size: 7.4px; letter-spacing: .14em; fill: var(--faint); }
+.diagram text { font-family: var(--mono); font-size: 7px; letter-spacing: .1em; fill: var(--faint); }
+.diagram .scale {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--faint);
+  padding: 5px 3px 1px;
+}
 .card:hover .beat { animation: beat 1.5s ease-in-out infinite; }
 .beat { transform-box: fill-box; transform-origin: center; }
 
@@ -374,164 +380,217 @@ footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 
 <header class="reveal">
   <span class="mark"><span class="hub" aria-hidden="true"></span><b>XploreSim</b> Tactical Console</span>
-  <h1>
-    推演台 · 两个赛季
-    <span class="cn">2026 REBUILT 与 2025 REEFSCAPE 的比赛模拟器 / 战术规划器，同一套 tick 引擎</span>
-  </h1>
+  <h1>Two seasons, one engine</h1>
   <p class="lede">
-    这不是战绩预测，是一台可以改常量的比赛模型：<strong>0.1 秒 tick 的运动学引擎</strong>按手册跑完整场，
-    画布球场上可拖拽回放，<strong>规则常量旁边就写着它的 Manual 条款号</strong>。
-    下面两个入口分别是两个赛季的完整页面，选一场、按下开始，剩下的都是它自己的事。
+    A match model you can argue with: a <strong>0.1&nbsp;second tick</strong> engine plays the whole MATCH under the
+    game manual, replays it on a canvas field, and prints the <strong>manual clause next to every constant</strong>.
+    Two entries below, one per season. Pick a roster and press start.
   </p>
   <ul class="facts">
-    <li>纯浏览器 · 无构建 · 运行时无网络</li>
-    <li>规则源：官方 Game Manual</li>
-    <li>数字校准锚：The Blue Alliance 真实比分</li>
-    <li>页面每个数字可由脚本复现</li>
+    <li>Runs in the browser · no build · no network at runtime</li>
+    <li>Rules source: official FRC Game Manual</li>
+    <li>Score anchor: The Blue Alliance</li>
+    <li>Every figure reproducible by script</li>
   </ul>
 </header>
 
 <main>
 
-<section class="seasons" aria-label="两个赛季">
+<section class="seasons" aria-label="The two seasons">
 
   <article class="card rebuilt reveal" style="--d:.08s">
     <div class="card-head">
       <span class="season">2026</span>
-      <span class="game">REBUILT<span class="zh">重装</span></span>
+      <span class="game">REBUILT</span>
     </div>
 
-    <div class="diagram" aria-hidden="true">
-      <svg viewBox="0 0 300 128" role="img">
-        <rect class="f" x="6" y="6" width="288" height="116" rx="10"/>
-        <circle class="l" cx="150" cy="64" r="30" stroke-width="1.6" opacity=".8"/>
-        <circle class="l" cx="150" cy="64" r="20" stroke-width="1.2" opacity=".55"/>
-        <circle class="l beat" cx="150" cy="64" r="7" stroke-width="2.6"/>
-        <g class="l" stroke-width="1.5">
-          <path d="M52 96 l10-17 10 17 z"/>
-          <path d="M46 96 h32"/>
-          <path d="M138 22 l10-13 10 13 z"/>
-          <path d="M132 22 h32"/>
-          <path d="M224 96 l10-17 10 17 z"/>
-          <path d="M218 96 h32"/>
+    <div class="diagram">
+      <svg viewBox="0 0 300 146" role="img" aria-label="Scaled plan of the 2026 REBUILT field: an alliance HUB on each side of the neutral zone, BUMPS and TRENCHES around it, a TOWER and a DEPOT at each alliance wall.">
+        <rect class="f" x="2" y="2" width="296" height="142" rx="9"/>
+        <g class="l" stroke-width="1" opacity=".38" stroke-dasharray="3 3">
+          <rect x="84.8" y="2" width="130.4" height="142"/>
+          <path d="M73.1 2 V144 M226.9 2 V144"/>
         </g>
-        <g style="fill:var(--tone)" opacity=".7">
-          <rect x="20" y="18" width="26" height="4" rx="2"/>
-          <rect x="254" y="104" width="26" height="4" rx="2"/>
+        <g class="l" stroke-width="1.5" opacity=".6">
+          <rect x="62.3" y="2" width="21.7" height="28"/>
+          <rect x="62.3" y="116" width="21.7" height="28"/>
+          <rect x="216" y="2" width="21.7" height="28"/>
+          <rect x="216" y="116" width="21.7" height="28"/>
         </g>
-        <text x="20" y="118">INTAKE</text>
-        <text x="222" y="18">HUB · TOWER×3</text>
+        <g class="l" stroke-width="1.5" opacity=".8">
+          <rect x="62.9" y="28.8" width="20.4" height="33.6"/>
+          <rect x="62.9" y="83.9" width="20.4" height="33.6"/>
+          <rect x="216.7" y="28.8" width="20.4" height="33.6"/>
+          <rect x="216.7" y="83.9" width="20.4" height="33.6"/>
+        </g>
+        <g class="l" stroke-width="1.8">
+          <rect x="62.3" y="62.4" width="21.7" height="21.7" rx="3"/>
+          <rect x="216.1" y="62.4" width="21.7" height="21.7" rx="3"/>
+        </g>
+        <g class="l" stroke-width="1" opacity=".5">
+          <rect x="63.6" y="63.7" width="19.2" height="19.2" rx="3"/>
+          <rect x="217.4" y="63.7" width="19.2" height="19.2" rx="3"/>
+        </g>
+        <rect class="l beat" x="69.9" y="70" width="6.5" height="6.5" rx="1.4" stroke-width="2"/>
+        <rect class="l beat" x="223.7" y="70" width="6.5" height="6.5" rx="1.4" stroke-width="2"/>
+        <g class="l" stroke-width="1.5" opacity=".85">
+          <rect x="3" y="64.2" width="20.8" height="18" rx="2"/>
+          <rect x="276.2" y="64.2" width="20.8" height="18" rx="2"/>
+        </g>
+        <g style="fill:var(--tone)" opacity=".72">
+          <rect x="3" y="41" width="12.4" height="19.3" rx="2"/>
+          <rect x="284.6" y="85.7" width="12.4" height="19.3" rx="2"/>
+        </g>
+        <text x="88" y="76">HUB</text>
+        <text x="27" y="76">TOWER</text>
+        <text x="19" y="52">DEPOT</text>
+        <text x="88" y="12">TRENCH</text>
+        <text x="150" y="141" text-anchor="middle">NEUTRAL ZONE</text>
       </svg>
+      <span class="scale">651.2 × 317.7 in, drawn to scale · §5.2–§5.9</span>
     </div>
 
     <p class="blurb">
-      向中央 <b>HUB</b> 装填 FUEL、末段爬上三座 <b>TOWER</b>。这一季已接到规划层：
-      逐段 <b>MCTS</b> 搜索 + 对手模型 + 每 ROBOT 的微效用策略，搜索用的是解析近似模型，
-      与真引擎之间的残差直接印在页面上，而不是藏起来。
+      Shoot <b>FUEL</b> into your alliance <b>HUB</b>, climb your <b>TOWER</b> at the whistle. The planner is
+      wired in: segment-by-segment <b>MCTS</b>, an opponent model, per-ROBOT micro policies. The gap between
+      the analytic model the search runs on and the real engine is printed on the page, not hidden.
     </p>
 
     <ul class="chips">
-      <li class="ok">已校准</li>
-      <li class="ok">AI 规划器可用</li>
+      <li class="ok">Calibrated</li>
+      <li class="ok">Planner available</li>
       <li>Manual TU21</li>
-      <li>0.1 s tick / 0.2 s 决策</li>
+      <li>0.1 s tick / 0.2 s decisions</li>
     </ul>
 
     <div class="nums">
-      <div class="num"><span class="v">627</span><span class="k">真实 Einstein Finals<br>ALLIANCE 平均分（842 最高）</span></div>
-      <div class="num"><span class="v">615.7<span> −1.8%</span></span><span class="k">同阵容 greedy 镜像<br>落在真实均值下方</span></div>
-      <div class="num"><span class="v">79.7<span> %</span></span><span class="k">AI 胜 greedy 的比例<br>n=96 · ±5 胜点</span></div>
+      <div class="num"><span class="v">627</span><span class="k">real Einstein Finals<br>mean ALLIANCE score (842 top)</span></div>
+      <div class="num"><span class="v">615.7<span> −1.8%</span></span><span class="k">greedy mirror, same roster<br>lands under the real mean</span></div>
+      <div class="num"><span class="v">79.7<span> %</span></span><span class="k">of MATCHes the AI wins<br>vs greedy · n=96 · ±5 pts</span></div>
     </div>
 
     <details class="notes">
-      <summary>模型已知偏差</summary>
+      <summary>Known model bias</summary>
       <ul>
-        <li>AUTO 偏低：引擎约 83 FUEL，真实强队 111–177。</li>
-        <li>TELEOP 吞吐偏高：5.44 FUEL/s 对真实约 4.7。</li>
-        <li>YELLOW/RED CARD 的锦标赛代价不在模型内。</li>
-        <li>TRAVERSAL RP 很少触达，TOWER 阶梯比真实强队软。</li>
+        <li>AUTO runs low: about 83 FUEL against 111–177 for a strong real alliance.</li>
+        <li>TELEOP throughput runs high: 5.44 FUEL/s against roughly 4.7.</li>
+        <li>YELLOW / RED CARD tournament cost is not modelled.</li>
+        <li>TRAVERSAL RP rarely triggers, so the TOWER ladder is softer than a real elite alliance's.</li>
       </ul>
     </details>
 
     <a class="go" href="https://frc-rebuilt-tactics-0ssdesrlvzc.qoder.zone/" target="_blank" rel="noopener">
-      进入 2026 REBUILT 推演台 <small>新窗口</small><span class="arrow">→</span>
+      Open the 2026 REBUILT console <small>new tab</small><span class="arrow">→</span>
     </a>
   </article>
 
   <article class="card reefscape reveal" style="--d:.16s">
     <div class="card-head">
       <span class="season">2025</span>
-      <span class="game">REEFSCAPE<span class="zh"> reef 之岸</span></span>
+      <span class="game">REEFSCAPE</span>
     </div>
 
-    <div class="diagram" aria-hidden="true">
-      <svg viewBox="0 0 300 128" role="img">
-        <rect class="f" x="6" y="6" width="288" height="116" rx="10"/>
-        <g class="l" stroke-width="1.4">
-          <path d="M150 26 l33 19 v38 l-33 19 -33-19 v-38 z"/>
-          <path d="M150 40 l21 12 v24 l-21 12 -21-12 v-24 z" opacity=".6"/>
-          <path d="M150 54 l9 5 v10 l-9 5 -9-5 v-10 z" opacity=".4"/>
+    <div class="diagram">
+      <svg viewBox="0 0 300 138" role="img" aria-label="Scaled plan of the 2025 REEFSCAPE field: a hexagonal REEF on each side inside its REEF ZONE, the BARGE across the centre with three CAGES per alliance and a NET hung over it, a PROCESSOR and two CORAL STATIONS per alliance.">
+        <rect class="f" x="3" y="3" width="294" height="132" rx="9"/>
+        <g class="l" stroke-width="1" opacity=".38" stroke-dasharray="3 3">
+          <path d="M150 3 V135"/>
+          <path d="M100.9 30 V108 M199.1 30 V108"/>
         </g>
-        <g style="fill:var(--tone)">
-          <circle class="beat" cx="150" cy="26" r="3"/><circle class="beat" cx="183" cy="45" r="3"/>
-          <circle class="beat" cx="183" cy="83" r="3"/><circle class="beat" cx="150" cy="102" r="3"/>
-          <circle class="beat" cx="117" cy="83" r="3"/><circle class="beat" cx="117" cy="45" r="3"/>
+        <g class="l" stroke-width="1.6" opacity=".75"><rect x="140.4" y="3" width="19.1" height="132"/></g>
+        <g class="l" stroke-width="1.3" opacity=".85">
+          <rect x="129.1" y="74.1" width="20.9" height="62.6"/>
+          <rect x="150" y="1.1" width="20.9" height="62.6"/>
         </g>
-        <g class="l" stroke-width="1.5" opacity=".85">
-          <path d="M40 62 a12 12 0 0 1 24 0"/>
-          <path d="M34 62 h36"/>
-          <path d="M236 62 a12 12 0 0 1 24 0"/>
-          <path d="M230 62 h36"/>
+        <g class="l" stroke-width="1.1" opacity=".45">
+          <path d="M62.6 45.4 l20.3 11.8 v23.5 l-20.3 11.7 -20.3-11.7 v-23.5 z"/>
+          <path d="M237.4 45.4 l20.3 11.8 v23.5 l-20.3 11.7 -20.3-11.7 v-23.5 z"/>
         </g>
-        <text x="118" y="20">REEF · 12 BRANCH ×3</text>
-        <text x="24" y="84">CAGE</text>
-        <text x="236" y="84">CAGE</text>
+        <g class="l" stroke-width="1.8">
+          <path d="M62.6 52.5 l14.2 8.2 v16.4 l-14.2 8.2 -14.2-8.2 v-16.4 z"/>
+          <path d="M237.4 52.5 l14.2 8.2 v16.4 l-14.2 8.2 -14.2-8.2 v-16.4 z"/>
+        </g>
+        <g class="beat" style="fill:var(--tone)">
+          <circle cx="76.8" cy="68.9" r="1.9"/><circle cx="69.7" cy="81.2" r="1.9"/><circle cx="55.5" cy="81.2" r="1.9"/>
+          <circle cx="48.4" cy="68.9" r="1.9"/><circle cx="55.5" cy="56.6" r="1.9"/><circle cx="69.7" cy="56.6" r="1.9"/>
+          <circle cx="251.6" cy="68.9" r="1.9"/><circle cx="244.5" cy="81.2" r="1.9"/><circle cx="230.3" cy="81.2" r="1.9"/>
+          <circle cx="223.2" cy="68.9" r="1.9"/><circle cx="230.3" cy="56.6" r="1.9"/><circle cx="244.5" cy="56.6" r="1.9"/>
+        </g>
+        <g class="l" stroke-width="2">
+          <path d="M145.2 82.5 v9 M145.2 100.9 v9 M145.2 119.6 v9"/>
+          <path d="M154.8 46.5 v9 M154.8 28.6 v9 M154.8 9.3 v9"/>
+        </g>
+        <g class="l" stroke-width="1.5">
+          <rect x="88.2" y="3" width="12.2" height="7"/>
+          <rect x="199.6" y="128" width="12.2" height="7"/>
+        </g>
+        <g style="fill:var(--tone)" opacity=".72">
+          <rect x="3" y="1.7" width="11" height="33" rx="2"/>
+          <rect x="3" y="103.3" width="11" height="33" rx="2"/>
+          <rect x="286" y="1.7" width="11" height="33" rx="2"/>
+          <rect x="286" y="103.3" width="11" height="33" rx="2"/>
+        </g>
+        <g style="fill:var(--tone)" opacity=".5">
+          <rect x="82.4" y="49.1" width="2.8" height="3.2"/><rect x="82.4" y="67.3" width="2.8" height="3.2"/><rect x="82.4" y="85.6" width="2.8" height="3.2"/>
+          <rect x="214.8" y="49.1" width="2.8" height="3.2"/><rect x="214.8" y="67.3" width="2.8" height="3.2"/><rect x="214.8" y="85.6" width="2.8" height="3.2"/>
+        </g>
+        <text x="62.6" y="70.8" text-anchor="middle">REEF</text>
+        <text x="135.2" y="105" text-anchor="middle">NET</text>
+        <text x="147" y="45" text-anchor="middle" transform="rotate(-90 147 45)">BARGE</text>
+        <text x="94.3" y="18.5" text-anchor="middle">PROCESSOR</text>
+        <text x="19.5" y="99" text-anchor="middle">STATION</text>
       </svg>
+      <span class="scale">690 × 317 in, drawn to scale · §5.1–§5.7</span>
     </div>
 
     <p class="blurb">
-      <b>REEF</b> 是有存量的：L2/L3/L4 各 12 根 BRANCH，一根 CORAL 放下去就不再长回来。
-      <b>CAGE</b> 深浅赛前一锤定音，<b>ALGAE</b> 链条让处理器变成负边际生意。
-      这一季目前是 Stage 1：双侧都跑手写基线，能整场回放，但还没有规划器。
+      The <b>REEF</b> has inventory: 12 BRANCHES on L2, L3 and L4, and a placed CORAL does not grow back.
+      CAGE depth is picked before the MATCH, and the ALGAE chain turns the PROCESSOR into a negative-margin
+      business. Each alliance runs its own baseline or planner; the planner re-solves the endgame climb
+      window every 10 s against what the REEF actually has left.
     </p>
 
     <ul class="chips">
-      <li class="warn">ROBOT 画像未标定</li>
-      <li class="warn">规划器 = Stage 2</li>
+      <li class="warn">the 0-PROCESSOR / 9-NET column is not calibrated yet</li>
+      <li class="warn">the planner only reproduces the best fixed rule</li>
       <li>Manual §5–§7</li>
-      <li>共用 2026 车体物理</li>
+      <li>both 2025 Einstein Finals rosters preset</li>
+      <li>shares the 2026 ROBOT physics</li>
     </ul>
 
     <div class="nums">
-      <div class="num"><span class="v">276</span><span class="k">模型上限 / ALLIANCE<br>高于任何真实 2025 队伍</span></div>
-      <div class="num"><span class="v">271.4<span> ±1.3</span></span><span class="k">完美-play 镜像（蓝）<br>n=48 · 红 271.7 ±1.0</span></div>
-      <div class="num"><span class="v">16/16</span><span class="k">greedy 胜 random<br>分差 87.4 ± 3.6</span></div>
+      <div class="num"><span class="v">321–317</span><span class="k">golden seed, one MATCH<br>blue 192 CORAL + 90 ALGAE + 9 LEAVE + 30 BARGE</span></div>
+      <div class="num"><span class="v">316.5<span> ±1.5</span></span><span class="k">same-roster mirror (blue)<br>n=48 · red 316.6 ±1.6 · margin −0.02 ±1.89</span></div>
+      <div class="num"><span class="v">+12.2<span> ±1.3</span></span><span class="k">planner vs shipped baseline<br>n=96 · both seat orders · −0.9 ±1.2 vs the best fixed rule</span></div>
     </div>
 
     <details class="notes">
-      <summary>读这些数字之前</summary>
+      <summary>Before you read those numbers</summary>
       <ul>
-        <li>当前 tempo 下 REEF 场场被清空，35/36 根 BRANCH 用光 —— 绝对值请按上限读，不要当预测。</li>
-        <li>存量被耗尽时 greedy 已顶到天花板，规划器没有吞吐余量可找，所以先做 Stage 3 校准再谈 Stage 2。</li>
-        <li>未定项：站点/处理器/CORAL-MARK 精确内缩、L1 容量 24、HUMAN PLAYER 抛射速率与精度、1.4 s CHUTE 进料。</li>
-        <li>ROBOT 用 R104 的 120 in 周长允许的 30 in 正方形，是规则上界而非任何真实机器。</li>
+        <li>The baselines separate: greedy beats a random intent 16/16 MATCHes, margin 146.6 ± 7.3.</li>
+        <li>At the current tempo the REEF is emptied every MATCH, so these absolute values are world-final level, not typical.</li>
+        <li>Named presets: CORAL totals from TBA alliance accounts, split between the three ROBOTs only by Statbotics 2025 EPA ratios. That reproduces Johnson at 59.1 and Newton at 58.9.</li>
+        <li>Drop the PROCESSOR column and the generic three-ROBOT alliance mean is 261.8 against 260.56 over 32 playoff alliance sides.</li>
+        <li>Per-ROBOT tempo is drawn ±20% each MATCH. The shipped fingerprint is 50650675, and with jitter switched off the build must still reproduce 12180c55.</li>
+        <li>The planner prices only the endgame climb window, because cycle rate is already at its ceiling. It beats the shipped baseline, and it only reproduces the best fixed rule: writing the answer down scores the same.</li>
+        <li>Open: exact station / PROCESSOR / CORAL-MARK insets, L1 capacity, HUMAN PLAYER throw rate and accuracy, CHUTE feed time, AUTO plan row count.</li>
       </ul>
     </details>
 
     <a class="go" href="https://frc-reefscape-tactics-0ssdesrlvzc.qoder.zone/" target="_blank" rel="noopener">
-      进入 2025 REEFSCAPE 推演台 <small>新窗口</small><span class="arrow">→</span>
+      Open the 2025 REEFSCAPE console <small>new tab</small><span class="arrow">→</span>
     </a>
   </article>
 
 </section>
 
 <section class="band reveal" style="--d:.24s">
-  <h2>两个赛季共用的四条规矩</h2>
+  <h2>Four rules both seasons follow</h2>
   <ul class="rules">
-    <li><b>条款紧邻常量</b>每条规则的数值旁边带着它的 Manual 条款号；手册自相矛盾的地方做成开关摆在页面上，不悄悄替读者选一个。</li>
-    <li><b>镜像＝同阵容双侧</b>一队三台机器两边相同，席位每两场翻转一次。把策略比较做成 ROBOT 比较，曾经造出一个并不存在的 60 分场地不对称。</li>
-    <li><b>每个物理开关都有 off 值</b>新增机制是一个可消融的实验臂，不是一个新默认值；配对消融跑在同一批种子上，未配对的均值差里混着种子方差。</li>
-    <li><b>报数就报 n 和标准误</b>单场镜像 ±2%，96 场一臂约 ±5 胜点。小于误差棒的胜率变化不算结论。</li>
+    <li><b>Clause beside the constant</b>Every value sits next to its manual clause. Where the manual contradicts itself, the choice is a switch on the page — never a silent pick.</li>
+    <li><b>Mirror means one roster on both sides</b>Three identical ROBOTs each alliance, seats swapped every other MATCH. That turns a strategy comparison into a ROBOT comparison; an earlier layout faked a 60-point field asymmetry by getting this wrong.</li>
+    <li><b>Every physics knob has an off value</b>A new mechanism ships as an ablatable experiment arm, not a new default. Paired arms run on the same seeds; unpaired mean differences carry seed variance.</li>
+    <li><b>Quote n and the standard error</b>A single mirror MATCH is ±2%; a 96-MATCH arm is about ±5 win points. A win-rate change smaller than its error bar is not a result.</li>
   </ul>
 </section>
 
@@ -539,11 +598,11 @@ footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 
 <footer class="reveal" style="--d:.3s">
   <div class="src">
-    <span>本域 <code>xploresim.salmoncat0304.xyz</code> → GitHub Pages，只做导航；内容在两个赛季页面里。</span>
-    <a href="https://github.com/CaryWang1234/XploreSim_dev" target="_blank" rel="noopener">2026 源码仓库</a>
-    <span>2025 源码暂未公开</span>
+    <span>This domain <code>xploresim.salmoncat0304.xyz</code> → GitHub Pages. It signposts only; the content lives on the two season pages.</span>
+    <a href="https://github.com/CaryWang1234/XploreSim_dev" target="_blank" rel="noopener">2026 source</a>
+    <span>2025 source not public yet</span>
   </div>
-  <span>校准数据：The Blue Alliance <code>2026cmptx</code> · 更新 2026-10-11</span>
+  <span>Calibration data: The Blue Alliance <code>2026cmptx</code> · updated 2026-10-12</span>
 </footer>
 
 </div>
