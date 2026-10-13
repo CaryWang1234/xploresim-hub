@@ -545,13 +545,14 @@ footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 
     <p class="blurb">
       The <b>REEF</b> has inventory: 12 BRANCHES on L2, L3 and L4, and a placed CORAL does not grow back.
-      CAGE depth is picked before the MATCH, and the ALGAE chain turns the PROCESSOR into a negative-margin
-      business. Each alliance runs its own baseline or planner; the planner re-solves the endgame climb
-      window every 10 s against what the REEF actually has left.
+      CAGE depth is picked before the MATCH, the ALGAE chain turns the PROCESSOR into a negative-margin
+      business, and a ROBOT can lift a ring into its own NET — on the golden seed all nine on each side are
+      lifted in and none is processed, which is what the 2025 Einstein ledger shows. Each alliance runs its own
+      baseline or planner; the planner re-solves through TELEOP against what the REEF actually has left.
     </p>
 
     <ul class="chips">
-      <li class="warn">the 0-PROCESSOR / 9-NET column is not calibrated yet</li>
+      <li class="warn">the AUTO and TROUGH rows are not calibrated yet</li>
       <li class="warn">the planner only reproduces the best fixed rule</li>
       <li>Manual §5–§7</li>
       <li>both 2025 Einstein Finals rosters preset</li>
@@ -559,21 +560,22 @@ footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
     </ul>
 
     <div class="nums">
-      <div class="num"><span class="v">293–305</span><span class="k">golden seed, one MATCH<br>blue 164 CORAL + 90 ALGAE + 9 LEAVE + 30 BARGE</span></div>
-      <div class="num"><span class="v">302.5<span> ±1.5</span></span><span class="k">same-roster mirror (blue)<br>n=48 · red 301.3 ±1.6 · margin 1.25 ±2.07</span></div>
-      <div class="num"><span class="v">+12.3<span> ±1.4</span></span><span class="k">planner vs shipped baseline<br>n=96 · both seat orders · +0.6 ±1.6 vs the best fixed rule</span></div>
+      <div class="num"><span class="v">251-247</span><span class="k">golden seed, one MATCH<br>blue 176 CORAL + 36 ALGAE + 9 LEAVE + 30 BARGE</span></div>
+      <div class="num"><span class="v">273.2<span> ±2.6</span></span><span class="k">same-roster mirror (blue)<br>n=48 · red 269.0 ±2.2 · margin 4.17 ± 2.53</span></div>
+      <div class="num"><span class="v">+15.6 ± 1.7</span><span class="k">planner vs shipped baseline<br>n=96 · both seat orders · +3.9 ± 1.6 from its own seat</span></div>
     </div>
 
     <details class="notes">
       <summary>Before you read those numbers</summary>
       <ul>
-        <li>The baselines separate: greedy beats a random intent 16/16 MATCHes, margin 154.3 ± 6.8.</li>
-        <li>Every BRANCH still fills and the TROUGH does not: a CORAL has to be lined up before it is pushed and can fall back onto the carpet, which costs an alliance 9.3 ± 2.2 points a MATCH (9.0 pieces of 24 an ALLIANCE-MATCH, and the trough fills 9.3 of its 24 against 13.9 when nothing can miss).</li>
-        <li>Defense is a negative-margin action here: one pressing seat takes 6.5 ± 1.6 off the opponent and costs its own ALLIANCE 13.4 ± 1.7, because contact inside a protected zone is a MAJOR for the other side whoever starts it.</li>
-        <li>Named presets: CORAL totals from TBA alliance accounts, split between the three ROBOTs only by Statbotics 2025 EPA ratios. That reproduces Johnson at 57.4 and Newton at 58.7.</li>
-        <li>Drop the PROCESSOR column and the generic three-ROBOT alliance mean is 248.7 against 260.56 over 32 playoff alliance sides.</li>
-        <li>Per-ROBOT tempo is drawn ±20% each MATCH. The shipped fingerprint is fa67df3a, and the two off values have to hand back the builds they came from: 50650675 with no placement model and 12180c55 with neither.</li>
-        <li>The planner prices only the endgame climb window, because cycle rate is already at its ceiling. It beats the shipped baseline, and it only reproduces the best fixed rule: writing the answer down scores the same.</li>
+        <li>The baselines separate: greedy beats a random intent 16/16 MATCHes, margin 167.5 ± 8.1.</li>
+        <li>Every BRANCH still fills and the TROUGH does not: a CORAL has to be lined up before it is pushed and can fall back onto the carpet, which costs an alliance 14.0 ± 3.1 points a MATCH (8.0 pieces of 24 an ALLIANCE-MATCH, and the trough fills 11.2 of its 24 against 15.0 when nothing can miss).</li>
+        <li>The NET has a second feeder now: <code>netScoreSec</code> is a ROBOT property, the shipped trio carries one, and over 16 MATCHes it books 11.1 deposits a MATCH. Both fleets having it is worth −26.8 ± 4.2 points a MATCH and one side having it is worth +10.3 ± 4.0, because the rings in your NET are the ones your opponent no longer pushed through their PROCESSOR.</li>
+        <li>Defense is a negative-margin action here: one pressing seat takes 7.0 ± 1.7 off the opponent and costs its own ALLIANCE 5.9 ± 1.9, because contact inside a protected zone is a MAJOR for the other side whoever starts it.</li>
+        <li>Named presets: CORAL totals from TBA alliance accounts, split between the three ROBOTs only by Statbotics 2025 EPA ratios. That reproduces Johnson at 58.1 and Newton at 58.8.</li>
+        <li>Drop the PROCESSOR column and the generic three-ROBOT alliance mean is 249.4 against 260.56 over 32 playoff alliance sides.</li>
+        <li>Per-ROBOT tempo is drawn ±20% each MATCH. The shipped fingerprint is 65be7627, and the two off values have to hand back the builds they came from: e1eaef89 with no tempo spread, 7856316 with no placement model and aad9e965 with neither.</li>
+        <li>The planner searches the climb window, the ALGAE duty and the CORAL STATION queue, and pins three budget rules the baseline leaves off: a cycle needs 4 s of clock to spare, the hopper is spent before the CAGE, and a piece a teammate is bound for costs 1.82 s of drive. All three together are +11.85 ± 3.17 combined points a MATCH on held-out seeds. It beats the shipped baseline, and it only reproduces the best fixed rule: writing the answer down scores the same.</li>
         <li>Open: exact station / PROCESSOR / CORAL-MARK insets, L1 capacity, HUMAN PLAYER throw rate and accuracy, CHUTE feed time, AUTO plan row count.</li>
       </ul>
     </details>

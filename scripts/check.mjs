@@ -75,7 +75,7 @@ await check('index.html: the figures it states are the source repos\' figures', 
   // side fails here rather than living on the front page.
   const SOURCES = [
     ['../../XploreSim_dev/README.md', ['627', '615.7', '79.7', 'n=96']],
-    ['../../XploreSim_dev/reefscape/README.md', ['302.5', '301.3', '154.3', '12.3', '9.3 ± 2.2', '6.5 ± 1.6', '13.4 ± 1.7', '57.4', '58.7', '248.7', '260.56', 'fa67df3a', '50650675', '12180c55']],
+    ['../../XploreSim_dev/reefscape/README.md', ['251-247', '273.2', '269.0', '4.17 ± 2.53', '167.5', '15.6 ± 1.7', '3.9 ± 1.6', '11.85 ± 3.17', '14.0 ± 3.1', '7.0 ± 1.7', '5.9 ± 1.9', '58.1', '58.8', '249.4', '260.56', '65be7627', 'e1eaef89', '7856316', 'aad9e965', '11.1', '26.8 ± 4.2', '10.3 ± 4.0']],
   ];
   for (const [from, nums] of SOURCES) {
     let text;
