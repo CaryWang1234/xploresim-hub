@@ -75,7 +75,7 @@ await check('index.html: the figures it states are the source repos\' figures', 
   // side fails here rather than living on the front page.
   const SOURCES = [
     ['../../XploreSim_dev/README.md', ['627', '615.7', '79.7', 'n=96']],
-    ['../../XploreSim_dev/reefscape/README.md', ['251-247', '273.2', '269.0', '4.17 ± 2.53', '167.5', '15.6 ± 1.7', '3.9 ± 1.6', '11.85 ± 3.17', '14.0 ± 3.1', '7.0 ± 1.7', '5.9 ± 1.9', '58.1', '58.8', '249.4', '260.56', '65be7627', 'e1eaef89', '7856316', 'aad9e965', '11.1', '26.8 ± 4.2', '10.3 ± 4.0']],
+    ['../../XploreSim_dev/reefscape/README.md', ['221-220', '265.9', '259.0', '6.85 ± 2.62', '148.3 ± 10.1', '15.3 ± 2.1', '9.9', '30.4 ± 2.5', '10.4 ± 3.4', '3.8 ± 1.9', '3.6 ± 1.8', '29.10 ± 2.78', '55.6', '55.7', '241.3', '260.56', '2.12 ± 0.77', '58fc82f0', '10a21890', '6480b718', '671e0ddf', '15.8 ± 2.0', '11.3 ± 2.2', '17.79']],
   ];
   for (const [from, nums] of SOURCES) {
     let text;
@@ -92,11 +92,11 @@ await check('index.html: the figures it states are the source repos\' figures', 
     }
   }
   // Stage 2 shipped, so the hub must not still carry the "planner is Stage 2" placeholder. What it must also
-  // keep saying is the unfavourable half of the result: the planner reproduces the best fixed rule, it does
-  // not beat it. If that qualifier ever disappears from the front page, the card is selling something the
-  // measurements do not support.
+  // keep saying is the unfavourable half of the result: on this seed construction the seat that is served first
+  // is worth 2-5 points by itself, and the re-plan has not yet bought a separable gain. If that qualifier ever
+  // disappears from the front page, the card is selling something the measurements do not support.
   assert.doesNotMatch(src['index.html'], /planner = Stage 2/);
-  assert.match(src['index.html'], /only reproduces the best fixed rule/);
+  assert.match(src['index.html'], /being served first is worth 2-5 points/);
 });
 
 await check('CNAME points at the domain this page is bound to', async () => {
