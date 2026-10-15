@@ -75,7 +75,7 @@ await check('index.html: the figures it states are the source repos\' figures', 
   // side fails here rather than living on the front page.
   const SOURCES = [
     ['../../XploreSim_dev/README.md', ['627', '615.7', '79.7', 'n=96']],
-    ['../../XploreSim_dev/reefscape/README.md', ['221-220', '265.9', '259.0', '6.85 ± 2.62', '148.3 ± 10.1', '15.3 ± 2.1', '9.9', '30.4 ± 2.5', '10.4 ± 3.4', '3.8 ± 1.9', '3.6 ± 1.8', '29.10 ± 2.78', '55.6', '55.7', '241.3', '260.56', '2.12 ± 0.77', '58fc82f0', '10a21890', '6480b718', '671e0ddf', '15.8 ± 2.0', '11.3 ± 2.2', '17.79']],
+    ['../../XploreSim_dev/reefscape/README.md', ['237-225', '156 CORAL', '42 ALGAE', '30 BARGE', '265.4 ± 1.7', '263.5 ± 2.4', '1.85 ± 2.29', '130.7 ± 6.1', '8.5 ± 1.9', '8.4 CORAL', '9.5 deposits a MATCH', '26.4 ± 2.3', '6.1 ± 4.1', '5.3 ± 3.5', '8.2 ± 4.6', '17.0 to 14.4', '1.29 ± 0.29', '1.00 ± 0.25', '8.1 ± 1.4', '2.6 ± 1.6', '28.83 ± 2.74', '56.3', '56.0', '240.1', '260.56', '1.70 ± 0.74', '17 to 13', '95531e05', '1bee40b6', 'f32cee33', '86ddb30e', 'netLaneSpread', 'netCapacity', '13.2 ± 2.3', '7.6 ± 2.4', '16.3 ± 2.4', '7.1 ± 2.6', '7.0 ± 1.7', '7.5 ± 2.3', '17.31', '7.23', '0.83', '1.82', 'up to five points']],
   ];
   for (const [from, nums] of SOURCES) {
     let text;
@@ -92,11 +92,12 @@ await check('index.html: the figures it states are the source repos\' figures', 
     }
   }
   // Stage 2 shipped, so the hub must not still carry the "planner is Stage 2" placeholder. What it must also
-  // keep saying is the unfavourable half of the result: on this seed construction the seat that is served first
-  // is worth 2-5 points by itself, and the re-plan has not yet bought a separable gain. If that qualifier ever
-  // disappears from the front page, the card is selling something the measurements do not support.
+  // keep saying is the unfavourable half of the result: on this seed construction an identical pairing is worth
+  // up to five points to whichever side is served first, and the re-plan has not yet bought a separable gain.
+  // If that qualifier ever disappears from the front page, the card is selling something the measurements do not
+  // support.
   assert.doesNotMatch(src['index.html'], /planner = Stage 2/);
-  assert.match(src['index.html'], /being served first is worth 2-5 points/);
+  assert.match(src['index.html'], /being served first is worth up to five points/);
 });
 
 await check('CNAME points at the domain this page is bound to', async () => {

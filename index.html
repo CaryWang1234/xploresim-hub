@@ -546,14 +546,15 @@ footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
     <p class="blurb">
       The <b>REEF</b> has inventory: 12 BRANCHES on L2, L3 and L4, and a placed CORAL does not grow back.
       CAGE depth is picked before the MATCH, the ALGAE chain turns the PROCESSOR into a negative-margin
-      business, and a ROBOT can lift a ring into its own NET — on the golden seed all nine on each side are
-      lifted in and none is processed, which is what the 2025 Einstein ledger shows. Each alliance runs its own
+      business, and a ROBOT can lift a ring into its own NET. That NET is a 12 ft face worked as three 4 ft
+      lanes, and it holds nine rings; on the golden seed each side books 9, 8 of them lifted in by a ROBOT and
+      1 processed. Each alliance runs its own
       baseline or planner; the planner re-solves through TELEOP against what the REEF actually has left.
     </p>
 
     <ul class="chips">
       <li class="warn">the AUTO and TROUGH rows are not calibrated yet</li>
-      <li class="warn">being served first is worth 2-5 points here</li>
+      <li class="warn">being served first is worth up to five points here</li>
       <li>Manual §5–§7</li>
       <li>both 2025 Einstein Finals rosters preset</li>
       <li>18 per-ROBOT presets, 9 from the 2025 EPA export</li>
@@ -561,23 +562,24 @@ footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
     </ul>
 
     <div class="nums">
-      <div class="num"><span class="v">221-220</span><span class="k">golden seed, one MATCH<br>blue 148 CORAL + 34 ALGAE + 9 LEAVE + 30 BARGE</span></div>
-      <div class="num"><span class="v">265.9<span> ±2.4</span></span><span class="k">same-roster mirror (blue)<br>n=48 · red 259.0 ±2.4 · margin 6.85 ± 2.62</span></div>
-      <div class="num"><span class="v">+15.8 ± 2.0</span><span class="k">planner vs shipped baseline<br>n=96 · both seat orders · +11.3 ± 2.2 vs the best fixed rule</span></div>
+      <div class="num"><span class="v">237-225</span><span class="k">golden seed, one MATCH<br>blue 156 CORAL + 42 ALGAE + 9 LEAVE + 30 BARGE</span></div>
+      <div class="num"><span class="v">265.4 ± 1.7</span><span class="k">same-roster mirror (blue)<br>n=48 · red 263.5 ± 2.4 · margin 1.85 ± 2.29</span></div>
+      <div class="num"><span class="v">+13.2 ± 2.3</span><span class="k">planner vs shipped baseline<br>n=96 · both seat orders · +7.0 ± 1.7 vs the best fixed rule</span></div>
     </div>
 
     <details class="notes">
       <summary>Before you read those numbers</summary>
       <ul>
-        <li>The baselines separate: greedy beats a random intent 16/16 MATCHes, margin 148.3 ± 10.1.</li>
-        <li>Every BRANCH still fills and the TROUGH does not: a CORAL has to be lined up before it is pushed and can fall back onto the carpet, which costs an alliance 15.3 ± 2.1 points a MATCH (8.5 CORAL an ALLIANCE-MATCH ends on the carpet, and the trough fills 5.3 of its 24 against 10.2 when nothing can miss).</li>
-        <li>The NET has a second feeder: <code>netScoreSec</code> is a ROBOT property, the shipped trio carries one, and over 16 MATCHes it books 9.9 deposits a MATCH. Both fleets having it is worth 30.4 ± 2.5 points a MATCH <em>less</em> and one side having it is worth a margin of 10.4 ± 3.4, because the rings in your NET are the ones your opponent no longer pushed through their PROCESSOR.</li>
-        <li>Defense is chosen by the planner now, not assigned by a checkbox, because the field prices it at nothing: one forced pressing seat costs its own ALLIANCE 3.8 ± 1.9 points and takes 3.6 ± 1.8 off the opponent's play — a wash — and the 29.10 ± 2.78 it loses of margin is the fouls it hands over, not the shadowing.</li>
-        <li>Named presets: CORAL totals from TBA alliance accounts, split between the three ROBOTs only by Statbotics 2025 EPA ratios. That reproduces Johnson at 55.6 and Newton at 55.7, and nine single machines come from the same export.</li>
-        <li>Drop the PROCESSOR column and the generic three-ROBOT alliance mean is 241.3 against 260.56 over 32 playoff alliance sides.</li>
-        <li>Per-ROBOT tempo is drawn ±20% each MATCH; it widens the mean |margin| by 2.12 ± 0.77 and takes exact ties from 18 to 8 over 288 paired seeds. The shipped fingerprint is 58fc82f0, and the two off values have to hand back the builds they came from: 10a21890 with no tempo spread, 6480b718 with no placement model and 671e0ddf with neither.</li>
-        <li>The planner searches the climb window, the ALGAE duty and the CORAL STATION queue, and pins four budget rules the baseline leaves off: a cycle needs 4 s of clock to spare, the hopper is spent before the CAGE, a piece a teammate is bound for costs 1.82 s of drive, and a press is priced at 0.08 a second. The first three are worth 17.79 combined points a MATCH over 48 paired seeds. It beats the shipped baseline and it beats the best fixed rule — but on this seed construction being served first is worth 2-5 points on its own, so both seat orders are printed and the re-plan itself still earns nothing separable.</li>
-        <li>Open: exact station / PROCESSOR / CORAL-MARK insets, L1 capacity, HUMAN PLAYER throw rate and accuracy, CHUTE feed time, AUTO plan row count.</li>
+        <li>The baselines separate: greedy beats a random intent 16/16 MATCHes, margin 130.7 ± 6.1.</li>
+        <li>Every BRANCH still fills and the TROUGH does not: a CORAL has to be lined up before it is pushed and can fall back onto the carpet, which costs an alliance 8.5 ± 1.9 points a MATCH (8.4 CORAL an ALLIANCE-MATCH ends on the carpet, and the trough fills 7.0 of its 24 against 10.3 when nothing can miss).</li>
+        <li>The NET has a second feeder: <code>netScoreSec</code> is a ROBOT property, the shipped trio carries one, and over 16 MATCHes it books 9.5 deposits a MATCH. Both fleets having it is worth 26.4 ± 2.3 points a MATCH <em>less</em> and one side having it is worth a margin of 6.1 ± 4.1 against it, because the rings in your NET are the ones your opponent no longer pushed through their PROCESSOR.</li>
+        <li>Until this round the whole ALLIANCE queued on one point of the 12 ft NET face. It is three 4 ft lanes now and a machine works its own: the spread alone is worth 5.3 ± 3.5 combined points a MATCH (8.2 ± 4.6 on a second seed base) and takes the corner unstick from 17.0 to 14.4 fires a MATCH. The nine-ring ceiling is geometry, not a clause — §6.5.1 counts any ring contacting the NET, so a pile is legal and only the 18 ALGAE a MATCH stages is written down. The ceiling on its own takes 1.29 ± 0.29 rings out of the two NETs and puts 1.00 ± 0.25 of them back through the PROCESSOR, where a ring pays 6 instead of 4.</li>
+        <li>Defense is chosen by the planner now, not assigned by a checkbox, because the field prices it at nothing: one forced pressing seat costs its own ALLIANCE 8.1 ± 1.4 points and takes 2.6 ± 1.6 off the opponent's play — a wash — and the 28.83 ± 2.74 it loses of margin is the fouls it hands over, not the shadowing.</li>
+        <li>Named presets: CORAL totals from TBA alliance accounts, split between the three ROBOTs only by Statbotics 2025 EPA ratios. That reproduces Johnson at 56.3 and Newton at 56.0, and nine single machines come from the same export.</li>
+        <li>Drop the PROCESSOR column and the generic three-ROBOT alliance mean is 240.1 against 260.56 over 32 playoff alliance sides.</li>
+        <li>Per-ROBOT tempo is drawn ±20% each MATCH; it widens the mean |margin| by 1.70 ± 0.74 and takes exact ties from 17 to 13 over 288 paired seeds. The shipped fingerprint is 95531e05, and the off values have to hand back the builds they came from: 1bee40b6 with no tempo spread, f32cee33 with no placement model, 86ddb30e with neither, and the four digests from before the NET lanes come back with <code>netLaneSpread</code> and <code>netCapacity</code> both off.</li>
+        <li>The planner searches the climb window, the ALGAE duty and the CORAL STATION queue, and pins four budget rules the baseline leaves off: a cycle needs 4 s of clock to spare, the hopper is spent before the CAGE, a piece a teammate is bound for costs 1.82 s of drive, and a press is priced at 0.08 a second. The first three are worth 17.31 combined points a MATCH over 48 paired seeds, 7.23 of it CORAL and 0.83 ALGAE. It beats the shipped baseline — +13.2 ± 2.3 and +7.6 ± 2.4 from the two seats, +16.3 ± 2.4 and +7.1 ± 2.6 on a second seed base — and it beats the best fixed rule by +7.0 ± 1.7 and +7.5 ± 2.3; but on this seed construction being served first is worth up to five points on its own, so both seat orders are printed and the re-plan itself still earns nothing separable.</li>
+        <li>Open: the NET's nine-ring ceiling is an estimate off the mesh, not a clause; exact station / PROCESSOR / CORAL-MARK insets, L1 capacity, HUMAN PLAYER throw rate and accuracy, CHUTE feed time, AUTO plan row count; and the two ledger rows the 2025 finals put well above this build, AUTO CORAL and the TROUGH.</li>
       </ul>
     </details>
 
