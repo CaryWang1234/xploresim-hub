@@ -12,11 +12,11 @@ GitHub Pages 站点，绑定 `xploresim.salmoncat0304.xyz`。只有一页：两�
 ## 文件
 
 ```
-index.html   单文件页面，内联 CSS 与 SVG，零 JS、零外部字体、零构建
+index.html   单文件页面：标题顶栏 + 两个横条入口，背景是纯 CSS 动画，零 JS、零外部字体、零构建
 CNAME        xploresim.salmoncat0304.xyz，GitHub Pages 读它来绑定自定义域名
 .nojekyll    跳过 Jekyll 处理
 404.html     Pages 的 404 页，复用同一主题
-scripts/     check.mjs（链接、数字、CNAME、可达性）与 check_style.mjs（样式表与类名互查）
+scripts/     check.mjs（链接、结构、CNAME、可达性）与 check_style.mjs（样式表与类名互查）
 ```
 
 ```
@@ -34,13 +34,12 @@ SKIP_NET=1 npm run check   # 只跑静态部分
 
 GitHub 看到 CNAME 文件后自动签发 HTTPS 证书。仓库设置里 Enforce HTTPS 需要手动勾上。
 
-## 内容的事实来源
+## 页面只放入口
 
-页面上的每个数字都来自源码仓库，改动时要一起核对：
+中心页不抄任何测量数字：真实比分锚、镜像、AI 胜率这些一律留在两个源码仓库自己的 README 里（2026 是
+`CaryWang1234/XploreSim_dev`，2025 是 dev 仓库内被 gitignore 掉的 `reefscape/` 同目录项目），本页只把人送到
+两个赛季站点。`check.mjs` 里对应一条「页面保持指路牌」的守卫：出现 `<article>`／`<details>`／`<svg>`／
+`class="card"`／`class="num"` 就报错，防止带数字的卡片被重新搬回首页。
 
-- 2026：`CaryWang1234/XploreSim_dev` 的 `README.md`（校准锚 `2026cmptx`、镜像 615.7、AI 79.7% n=96）
-- 2025：XploreSim_dev 仓库内 gitignore 掉的 `reefscape/` 同目录项目，其 `README.md` 与 `web/index.html` 的 Stage 1 说明
-
-页面正文只写英文，`npm run check` 里有一条 CJK 守卫盯这件事。两张赛场图按手册尺寸等比绘制（2026 用
-`§5.2–§5.9` 的 651.2 × 317.7 in，2025 用 `§5.1–§5.7` 的 690 × 317 in），坐标取自两个仓库各自的 GEO 常量，
-不是手绘示意；图下方标了比例来源。
+页面正文只写英文，`npm run check` 里有一条 CJK 守卫盯这件事。背景全部用 CSS 画：底部的透视网格是赛场地毯，
+左上与右上的两团辉光是红蓝 alliance 色，`prefers-reduced-motion` 下所有动画一律关掉。

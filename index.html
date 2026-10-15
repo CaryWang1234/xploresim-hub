@@ -4,33 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>XploreSim · FRC match simulators for two seasons</title>
-<meta name="description" content="XploreSim: the hub for two FRC match simulators and tactical planners — 2026 REBUILT and 2025 REEFSCAPE. Runs entirely in the browser, every rule constant sits next to its manual clause, and every figure on the page is reproducible.">
-<meta name="theme-color" content="#0b1017">
+<meta name="description" content="XploreSim hub: the entry points for two browser FRC match simulators and tactical planners — 2026 REBUILT and 2025 REEFSCAPE.">
+<meta name="theme-color" content="#080c12">
 <meta property="og:title" content="XploreSim · FRC match simulators for two seasons">
-<meta property="og:description" content="Simulators for the 2026 REBUILT and 2025 REEFSCAPE games: a 0.1 s tick engine, a canvas field you can scrub, and a segment-by-segment tactical search.">
+<meta property="og:description" content="Two entries, one per season: a 0.1 s tick engine and a segment-by-segment tactical planner for the 2026 REBUILT and 2025 REEFSCAPE games.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1017'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23ffd94a' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23ffd94a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080c12'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23ffd94a' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23ffd94a'/%3E%3C/svg%3E">
 <style>
 :root {
-  --bg: #0b1017;
-  --carpet: #101823;
-  --panel: #131b26;
-  --panel-2: #18222f;
-  --line: #26313f;
-  --line-hi: #3a4a60;
-  --text: #e6edf7;
+  --bg: #080c12;
+  --text: #e9f0fa;
   --dim: #8ea0bb;
-  --faint: #6a7b95;
+  --faint: #647694;
+  --line: #22303f;
+  --line-hi: #3d5069;
   --red: #e0413f;
   --blue: #2f7de1;
-  --accent: #ffd94a;
-  --coral: #f2b13c;
-  --algae: #4ec08a;
-  --good: #46c98b;
+  --rebuilt: #ffd94a;
+  --reefscape: #ff8a5c;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --sans: "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 24px 48px -28px rgba(0, 0, 0, .75);
-  --wrap: 1080px;
 }
 
 * { box-sizing: border-box; }
@@ -39,578 +32,360 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
   font-family: var(--sans);
-  font-size: 15px;
-  line-height: 1.62;
   color: var(--text);
   background:
-    radial-gradient(1100px 520px at 12% -12%, #1a2534 0%, rgba(11, 16, 23, 0) 62%),
-    radial-gradient(760px 420px at 96% 4%, #17222f 0%, rgba(11, 16, 23, 0) 58%),
+    radial-gradient(1000px 520px at 8% -14%, #17222f 0%, rgba(8, 12, 18, 0) 60%),
+    radial-gradient(820px 460px at 98% -6%, #14202e 0%, rgba(8, 12, 18, 0) 55%),
+    radial-gradient(1200px 620px at 50% 118%, #0f1a24 0%, rgba(8, 12, 18, 0) 62%),
     var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Carpet: hairline field grid + grain, kept under everything. */
-body::before {
-  content: "";
+/* ---------- the carpet, drawn in CSS: nothing here runs JavaScript ---------- */
+
+.bg {
   position: fixed;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  background-image:
-    linear-gradient(to right, rgba(140, 165, 200, .05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(140, 165, 200, .05) 1px, transparent 1px);
-  background-size: 96px 96px, 96px 96px;
-  -webkit-mask-image: radial-gradient(1200px 700px at 50% 0%, #000 20%, transparent 78%);
-  mask-image: radial-gradient(1200px 700px at 50% 0%, #000 20%, transparent 78%);
-  z-index: 0;
 }
 
-.wrap { width: min(100% - 40px, var(--wrap)); margin-inline: auto; position: relative; z-index: 1; }
+.floor {
+  position: absolute;
+  left: -30%;
+  right: -30%;
+  bottom: -8%;
+  height: 68%;
+  perspective: 520px;
+  perspective-origin: 50% 0%;
+  -webkit-mask-image: linear-gradient(to top, #000 6%, rgba(0, 0, 0, .4) 42%, transparent 86%);
+  mask-image: linear-gradient(to top, #000 6%, rgba(0, 0, 0, .4) 42%, transparent 86%);
+}
 
-h1, h2, h3 { margin: 0; font-weight: 650; letter-spacing: .01em; }
-p { margin: 0; }
-a { color: inherit; }
+.grid {
+  position: absolute;
+  inset: -45% -45%;
+  background-image:
+    linear-gradient(to right, rgba(126, 176, 232, .21) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(126, 176, 232, .21) 1px, transparent 1px);
+  background-size: 92px 92px;
+  will-change: transform;
+  animation: roll 7s linear infinite;
+}
 
-/* Alliances strip = the only thing above the page. Reads as a match wall. */
-.strip {
-  display: flex;
-  height: 3px;
+.glow {
+  position: absolute;
+  width: min(62vw, 780px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(72px);
+}
+.glow.r {
+  left: -14%;
+  top: -24%;
+  background: radial-gradient(circle at 42% 42%,
+    rgba(224, 65, 63, .46) 0%, rgba(224, 65, 63, .2) 34%, rgba(224, 65, 63, .06) 56%, rgba(224, 65, 63, 0) 74%);
+  animation: drift-a 19s ease-in-out infinite alternate;
+}
+.glow.b {
+  right: -14%;
+  top: -20%;
+  background: radial-gradient(circle at 58% 42%,
+    rgba(47, 125, 225, .46) 0%, rgba(47, 125, 225, .2) 34%, rgba(47, 125, 225, .06) 56%, rgba(47, 125, 225, 0) 74%);
+  animation: drift-b 24s ease-in-out infinite alternate;
+}
+
+.beam {
+  position: absolute;
+  top: -35%;
+  left: -30%;
+  width: 24%;
+  height: 175%;
+  background: linear-gradient(to right, transparent, rgba(233, 240, 250, .095), transparent);
+  filter: blur(12px);
+  animation: sweep 15s ease-in-out infinite;
+}
+
+.spark {
+  position: absolute;
+  bottom: -4%;
+  left: var(--x);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c);
+  animation: float 17s linear infinite;
+  animation-delay: var(--s);
+}
+.bg i:nth-of-type(odd) { --c: rgba(255, 217, 74, .75); }
+.bg i:nth-of-type(even) { --c: rgba(47, 125, 225, .75); }
+
+/* ---------- title bar ---------- */
+
+.bar {
   position: sticky;
   top: 0;
-  z-index: 5;
-}
-.strip i { flex: 1; }
-.strip .r { background: linear-gradient(90deg, var(--red), #8f1f24); }
-.strip .y { flex: 0 0 132px; background: var(--accent); }
-.strip .b { background: linear-gradient(90deg, #1c4f96, var(--blue)); }
-
-header { padding: 44px 0 10px; }
-
-.mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: .34em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-.mark b { color: var(--text); font-weight: 600; }
-.mark .hub {
-  width: 13px; height: 13px; border-radius: 50%;
-  border: 2px solid var(--accent);
-  position: relative;
-  flex: none;
-}
-.mark .hub::after {
-  content: ""; position: absolute; inset: 3px; border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2.6s ease-in-out infinite;
-}
-
-h1 {
-  margin: 18px 0 0;
-  font-size: clamp(34px, 7.2vw, 58px);
-  line-height: 1.04;
-  letter-spacing: -.022em;
-  font-weight: 700;
-}
-
-.lede { max-width: 62ch; color: var(--dim); margin-top: 20px; }
-.lede strong { color: var(--text); font-weight: 600; }
-
-.facts {
+  z-index: 3;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
-  margin: 26px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.facts li {
-  font-family: var(--mono);
-  font-size: 11.5px;
-  letter-spacing: .06em;
-  color: var(--dim);
-  border: 1px solid var(--line);
-  background: rgba(24, 34, 47, .55);
-  border-radius: 999px;
-  padding: 5px 11px 5px 9px;
-  display: inline-flex;
   align-items: center;
-  gap: 7px;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px clamp(18px, 4vw, 42px) 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(8, 12, 18, .58);
+  -webkit-backdrop-filter: blur(9px) saturate(1.15);
+  backdrop-filter: blur(9px) saturate(1.15);
 }
-.facts li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--algae); flex: none; }
-
-/* ---------- season cards ---------- */
-
-.seasons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  margin: 40px 0 8px;
-  align-items: start;
-}
-
-.card {
-  position: relative;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 46%, #111821 100%);
-  box-shadow: var(--shadow);
-  padding: 22px 22px 20px;
-  overflow: hidden;
-  transition: transform .28s cubic-bezier(.2, .8, .2, 1), border-color .28s, box-shadow .28s;
-}
-.card::after {
+.bar::before {
   content: "";
   position: absolute;
   inset: 0 0 auto;
   height: 2px;
-  background: var(--tone, var(--accent));
-  opacity: .85;
-}
-.card:hover, .card:focus-within {
-  transform: translateY(-3px);
-  border-color: var(--line-hi);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 34px 60px -30px rgba(0, 0, 0, .85);
-}
-.card.rebuilt { --tone: var(--accent); }
-.card.reefscape { --tone: var(--coral); }
-
-.card-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.season {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .2em;
-  color: var(--faint);
-}
-.game {
-  font-family: var(--mono);
-  font-size: clamp(21px, 3.4vw, 26px);
-  letter-spacing: .02em;
-  font-weight: 600;
+  background: linear-gradient(90deg, var(--red), var(--rebuilt) 48%, var(--blue));
 }
 
-.diagram {
-  margin: 16px 0 4px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background:
-    radial-gradient(340px 150px at 50% 0%, rgba(255, 255, 255, .045), transparent 70%),
-    var(--carpet);
-  padding: 6px;
-}
-.diagram svg { display: block; width: 100%; height: auto; }
-.diagram .f { fill: none; stroke: var(--line-hi); }
-.diagram .l { stroke: var(--tone); fill: none; }
-.diagram text { font-family: var(--mono); font-size: 7px; letter-spacing: .1em; fill: var(--faint); }
-.diagram .scale {
-  display: block;
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: .1em;
-  color: var(--faint);
-  padding: 5px 3px 1px;
-}
-.card:hover .beat { animation: beat 1.5s ease-in-out infinite; }
-.beat { transform-box: fill-box; transform-origin: center; }
-
-.blurb { color: var(--dim); margin-top: 14px; font-size: 14px; }
-.blurb b { color: var(--text); font-weight: 600; }
-
-.chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0 0; padding: 0; list-style: none; }
-.chips li {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .07em;
-  padding: 4px 9px;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-  color: var(--dim);
-  background: rgba(11, 16, 23, .5);
-}
-.chips li.ok { color: var(--good); border-color: rgba(70, 201, 139, .34); background: rgba(70, 201, 139, .08); }
-.chips li.warn { color: var(--coral); border-color: rgba(242, 177, 60, .32); background: rgba(242, 177, 60, .08); }
-
-.nums {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 18px 0 0;
-  padding: 15px 0 0;
-  border-top: 1px solid var(--line);
-}
-.num .v {
-  display: block;
-  font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -.01em;
-  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
   color: var(--text);
+  white-space: nowrap;
 }
-.num .v span { font-size: 12px; color: var(--faint); font-weight: 500; }
-.num .k { display: block; font-size: 11.5px; color: var(--faint); margin-top: 3px; line-height: 1.4; }
+.mark em {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--faint);
+}
+.hub {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--rebuilt);
+  position: relative;
+  flex: none;
+}
+.hub::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--rebuilt);
+  animation: pulse 2.6s ease-in-out infinite;
+}
 
-details.notes {
-  margin: 16px 0 0;
-  border-top: 1px solid var(--line);
-  padding-top: 12px;
-}
-details.notes summary {
-  cursor: pointer;
+.host {
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: .1em;
   color: var(--faint);
-  list-style: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  text-align: right;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
-details.notes summary::-webkit-details-marker { display: none; }
-details.notes summary::before {
-  content: "+";
-  color: var(--tone);
-  font-size: 13px;
-  transition: transform .2s;
-}
-details.notes[open] summary::before { content: "–"; }
-details.notes ul { margin: 10px 0 0; padding-left: 18px; color: var(--dim); font-size: 13.5px; }
-details.notes li { margin: 5px 0; }
-details.notes li::marker { color: var(--tone); }
 
-.go {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 18px;
-  padding: 13px 16px;
-  border-radius: 11px;
-  background: var(--tone);
-  color: #0a0e14;
-  font-weight: 700;
-  font-size: 14.5px;
-  letter-spacing: .02em;
-  text-decoration: none;
-  transition: filter .2s, transform .2s;
-}
-.go:hover { filter: brightness(1.08); transform: translateX(2px); }
-.go:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-.go small { font-family: var(--mono); font-weight: 500; font-size: 11px; opacity: .62; letter-spacing: .04em; }
-.go .arrow { font-family: var(--mono); font-size: 15px; }
+/* ---------- the two entries ---------- */
 
-/* ---------- shared principles ---------- */
-
-.band {
-  margin: 46px 0 0;
-  border-top: 1px solid var(--line);
-  padding-top: 26px;
-}
-.band h2 {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .24em;
-  text-transform: uppercase;
-  color: var(--faint);
-  font-weight: 600;
-}
-.rules {
+.stage {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 22px 26px;
-  margin: 20px 0 0;
-  padding: 0;
-  list-style: none;
+  place-items: center;
+  padding: clamp(40px, 11vh, 120px) clamp(18px, 5vw, 42px) clamp(32px, 8vh, 90px);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
 }
-.rules li { position: relative; padding-left: 20px; font-size: 14px; color: var(--dim); }
-.rules li::before {
+/* The pool the two entries sit in. Out of flow, so the grid still centres the nav. */
+.stage::before {
   content: "";
   position: absolute;
-  left: 0; top: .62em;
-  width: 9px; height: 2px;
-  background: var(--accent);
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(1180px, 96%);
+  height: min(66vh, 560px);
+  background: radial-gradient(58% 62% at 50% 50%, rgba(196, 220, 255, .11), rgba(196, 220, 255, 0) 72%);
+  animation: breathe 9s ease-in-out infinite alternate;
 }
-.rules b { display: block; color: var(--text); font-weight: 650; font-size: 14.5px; margin-bottom: 3px; }
 
-footer {
-  margin: 44px 0 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 26px;
-  align-items: baseline;
-  justify-content: space-between;
-  font-size: 13px;
+.entries {
+  width: min(780px, 100%);
+  display: grid;
+  gap: 20px;
+}
+
+.go {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 21px 24px 21px 30px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(104deg, rgba(25, 36, 49, .9) 0%, rgba(13, 19, 27, .84) 100%);
+  color: var(--text);
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), border-color .3s, box-shadow .3s;
+}
+.go::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--tone);
+  box-shadow: 0 0 20px var(--tone);
+}
+.go::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 32%, rgba(233, 240, 250, .11) 50%, transparent 68%);
+  transform: translateX(-110%);
+  transition: transform .65s cubic-bezier(.2, .8, .2, 1);
+}
+.go > span { position: relative; z-index: 1; }
+.go:hover, .go:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--tone);
+  box-shadow: 0 20px 44px -24px var(--tone);
+}
+.go:hover::after, .go:focus-visible::after { transform: translateX(110%); }
+.go:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.go:active { transform: translateY(-1px); }
+
+.go.rebuilt { --tone: var(--rebuilt); }
+.go.reefscape { --tone: var(--reefscape); }
+
+.yr {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .22em;
   color: var(--faint);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
 }
-footer a { color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--line-hi); padding-bottom: 1px; }
-footer a:hover { color: var(--accent); border-color: var(--accent); }
-footer .src { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.name b {
+  display: block;
+  font-family: var(--mono);
+  font-size: clamp(20px, 3.4vw, 26px);
+  font-weight: 600;
+  letter-spacing: .05em;
+  line-height: 1.14;
+}
+.name em {
+  display: block;
+  font-style: normal;
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--dim);
+}
+.name i {
+  font-family: var(--mono);
+  font-style: normal;
+  color: var(--tone);
+}
+.arrow {
+  font-family: var(--mono);
+  font-size: 21px;
+  line-height: 1;
+  color: var(--tone);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+.go:hover .arrow, .go:focus-visible .arrow { transform: translateX(5px); }
 
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
-@keyframes beat { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes roll {
+  from { transform: rotateX(74deg) translateY(0); }
+  to { transform: rotateX(74deg) translateY(92px); }
+}
+@keyframes drift-a { to { transform: translate3d(8vw, 5vh, 0) scale(1.14); } }
+@keyframes drift-b { to { transform: translate3d(-9vw, 7vh, 0) scale(1.1); } }
+@keyframes sweep {
+  0% { transform: rotate(15deg) translateX(-20vw); opacity: 0; }
+  20% { opacity: 1; }
+  58% { opacity: 1; }
+  72% { transform: rotate(15deg) translateX(190vw); opacity: 0; }
+  100% { transform: rotate(15deg) translateX(190vw); opacity: 0; }
+}
+@keyframes float {
+  0% { transform: translateY(0) scale(.5); opacity: 0; }
+  10% { opacity: .7; }
+  85% { opacity: .5; }
+  100% { transform: translateY(-88vh) scale(1.1); opacity: 0; }
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+@keyframes breathe { from { opacity: .5; scale: .93; } to { opacity: 1; scale: 1.07; } }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-.reveal { animation: rise .7s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d, 0s); }
+.reveal { animation: rise .8s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d, 0s); }
 
 @media (max-width: 560px) {
-  .nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .num .v { font-size: 18px; }
-  header { padding-top: 32px; }
-  .go { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .mark { font-size: 12.5px; letter-spacing: .2em; }
+  .mark em { display: none; }
+  .host { font-size: 10px; letter-spacing: .02em; }
+  .go { gap: 15px; padding: 19px 18px 19px 24px; }
+  .name em { font-size: 12.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
+  .grid { transform: rotateX(74deg); }
 }
 </style>
 </head>
 <body>
 
-<div class="strip" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="b"></i></div>
+<div class="bg" aria-hidden="true">
+  <div class="floor"><div class="grid"></div></div>
+  <span class="glow r"></span>
+  <span class="glow b"></span>
+  <span class="beam"></span>
+  <i class="spark" style="--x:7%;--s:0s"></i>
+  <i class="spark" style="--x:19%;--s:-4.2s"></i>
+  <i class="spark" style="--x:28%;--s:-8.6s"></i>
+  <i class="spark" style="--x:39%;--s:-2.4s"></i>
+  <i class="spark" style="--x:52%;--s:-11.1s"></i>
+  <i class="spark" style="--x:63%;--s:-6.3s"></i>
+  <i class="spark" style="--x:74%;--s:-13.8s"></i>
+  <i class="spark" style="--x:86%;--s:-1.5s"></i>
+  <i class="spark" style="--x:94%;--s:-9.4s"></i>
+</div>
 
-<div class="wrap">
-
-<header class="reveal">
-  <span class="mark"><span class="hub" aria-hidden="true"></span><b>XploreSim</b> Tactical Console</span>
-  <h1>Two seasons, one engine</h1>
-  <p class="lede">
-    A match model you can argue with: a <strong>0.1&nbsp;second tick</strong> engine plays the whole MATCH under the
-    game manual, replays it on a canvas field, and prints the <strong>manual clause next to every constant</strong>.
-    Two entries below, one per season. Pick a roster and press start.
-  </p>
-  <ul class="facts">
-    <li>Runs in the browser · no build · no network at runtime</li>
-    <li>Rules source: official FRC Game Manual</li>
-    <li>Score anchor: The Blue Alliance</li>
-    <li>Every figure reproducible by script</li>
-  </ul>
+<header class="bar reveal">
+  <span class="mark"><span class="hub" aria-hidden="true"></span>XploreSim<em>FRC match simulators</em></span>
+  <span class="host">xploresim.salmoncat0304.xyz</span>
 </header>
 
-<main>
+<main class="stage">
 
-<section class="seasons" aria-label="The two seasons">
-
-  <article class="card rebuilt reveal" style="--d:.08s">
-    <div class="card-head">
-      <span class="season">2026</span>
-      <span class="game">REBUILT</span>
-    </div>
-
-    <div class="diagram">
-      <svg viewBox="0 0 300 146" role="img" aria-label="Scaled plan of the 2026 REBUILT field: an alliance HUB on each side of the neutral zone, BUMPS and TRENCHES around it, a TOWER and a DEPOT at each alliance wall.">
-        <rect class="f" x="2" y="2" width="296" height="142" rx="9"/>
-        <g class="l" stroke-width="1" opacity=".38" stroke-dasharray="3 3">
-          <rect x="84.8" y="2" width="130.4" height="142"/>
-          <path d="M73.1 2 V144 M226.9 2 V144"/>
-        </g>
-        <g class="l" stroke-width="1.5" opacity=".6">
-          <rect x="62.3" y="2" width="21.7" height="28"/>
-          <rect x="62.3" y="116" width="21.7" height="28"/>
-          <rect x="216" y="2" width="21.7" height="28"/>
-          <rect x="216" y="116" width="21.7" height="28"/>
-        </g>
-        <g class="l" stroke-width="1.5" opacity=".8">
-          <rect x="62.9" y="28.8" width="20.4" height="33.6"/>
-          <rect x="62.9" y="83.9" width="20.4" height="33.6"/>
-          <rect x="216.7" y="28.8" width="20.4" height="33.6"/>
-          <rect x="216.7" y="83.9" width="20.4" height="33.6"/>
-        </g>
-        <g class="l" stroke-width="1.8">
-          <rect x="62.3" y="62.4" width="21.7" height="21.7" rx="3"/>
-          <rect x="216.1" y="62.4" width="21.7" height="21.7" rx="3"/>
-        </g>
-        <g class="l" stroke-width="1" opacity=".5">
-          <rect x="63.6" y="63.7" width="19.2" height="19.2" rx="3"/>
-          <rect x="217.4" y="63.7" width="19.2" height="19.2" rx="3"/>
-        </g>
-        <rect class="l beat" x="69.9" y="70" width="6.5" height="6.5" rx="1.4" stroke-width="2"/>
-        <rect class="l beat" x="223.7" y="70" width="6.5" height="6.5" rx="1.4" stroke-width="2"/>
-        <g class="l" stroke-width="1.5" opacity=".85">
-          <rect x="3" y="64.2" width="20.8" height="18" rx="2"/>
-          <rect x="276.2" y="64.2" width="20.8" height="18" rx="2"/>
-        </g>
-        <g style="fill:var(--tone)" opacity=".72">
-          <rect x="3" y="41" width="12.4" height="19.3" rx="2"/>
-          <rect x="284.6" y="85.7" width="12.4" height="19.3" rx="2"/>
-        </g>
-        <text x="88" y="76">HUB</text>
-        <text x="27" y="76">TOWER</text>
-        <text x="19" y="52">DEPOT</text>
-        <text x="88" y="12">TRENCH</text>
-        <text x="150" y="141" text-anchor="middle">NEUTRAL ZONE</text>
-      </svg>
-      <span class="scale">651.2 × 317.7 in, drawn to scale · §5.2–§5.9</span>
-    </div>
-
-    <p class="blurb">
-      Shoot <b>FUEL</b> into your alliance <b>HUB</b>, climb your <b>TOWER</b> at the whistle. The planner is
-      wired in: segment-by-segment <b>MCTS</b>, an opponent model, per-ROBOT micro policies. The gap between
-      the analytic model the search runs on and the real engine is printed on the page, not hidden.
-    </p>
-
-    <ul class="chips">
-      <li class="ok">Calibrated</li>
-      <li class="ok">Planner available</li>
-      <li>Manual TU21</li>
-      <li>0.1 s tick / 0.2 s decisions</li>
-    </ul>
-
-    <div class="nums">
-      <div class="num"><span class="v">627</span><span class="k">real Einstein Finals<br>mean ALLIANCE score (842 top)</span></div>
-      <div class="num"><span class="v">615.7<span> −1.8%</span></span><span class="k">greedy mirror, same roster<br>lands under the real mean</span></div>
-      <div class="num"><span class="v">79.7<span> %</span></span><span class="k">of MATCHes the AI wins<br>vs greedy · n=96 · ±5 pts</span></div>
-    </div>
-
-    <details class="notes">
-      <summary>Known model bias</summary>
-      <ul>
-        <li>AUTO runs low: about 83 FUEL against 111–177 for a strong real alliance.</li>
-        <li>TELEOP throughput runs high: 5.44 FUEL/s against roughly 4.7.</li>
-        <li>YELLOW / RED CARD tournament cost is not modelled.</li>
-        <li>TRAVERSAL RP rarely triggers, so the TOWER ladder is softer than a real elite alliance's.</li>
-      </ul>
-    </details>
-
-    <a class="go" href="https://frc-rebuilt-tactics-0ssdesrlvzc.qoder.zone/" target="_blank" rel="noopener">
-      Open the 2026 REBUILT console <small>new tab</small><span class="arrow">→</span>
+  <nav class="entries" aria-label="Season consoles">
+    <a class="go rebuilt reveal" style="--d:.1s" href="https://frc-rebuilt-tactics-0ssdesrlvzc.qoder.zone/" target="_blank" rel="noopener">
+      <span class="yr">2026</span>
+      <span class="name"><b>REBUILT</b><em>Drive the <i>HUB</i> · climb the <i>TOWER</i> · planner included</em></span>
+      <span class="arrow" aria-hidden="true">&rarr;</span>
     </a>
-  </article>
 
-  <article class="card reefscape reveal" style="--d:.16s">
-    <div class="card-head">
-      <span class="season">2025</span>
-      <span class="game">REEFSCAPE</span>
-    </div>
-
-    <div class="diagram">
-      <svg viewBox="0 0 300 138" role="img" aria-label="Scaled plan of the 2025 REEFSCAPE field: a hexagonal REEF on each side inside its REEF ZONE, the BARGE across the centre with three CAGES per alliance and a NET hung over it, a PROCESSOR and two CORAL STATIONS per alliance.">
-        <rect class="f" x="3" y="3" width="294" height="132" rx="9"/>
-        <g class="l" stroke-width="1" opacity=".38" stroke-dasharray="3 3">
-          <path d="M150 3 V135"/>
-          <path d="M100.9 30 V108 M199.1 30 V108"/>
-        </g>
-        <g class="l" stroke-width="1.6" opacity=".75"><rect x="140.4" y="3" width="19.1" height="132"/></g>
-        <g class="l" stroke-width="1.3" opacity=".85">
-          <rect x="129.1" y="74.1" width="20.9" height="62.6"/>
-          <rect x="150" y="1.1" width="20.9" height="62.6"/>
-        </g>
-        <g class="l" stroke-width="1.1" opacity=".45">
-          <path d="M62.6 45.4 l20.3 11.8 v23.5 l-20.3 11.7 -20.3-11.7 v-23.5 z"/>
-          <path d="M237.4 45.4 l20.3 11.8 v23.5 l-20.3 11.7 -20.3-11.7 v-23.5 z"/>
-        </g>
-        <g class="l" stroke-width="1.8">
-          <path d="M62.6 52.5 l14.2 8.2 v16.4 l-14.2 8.2 -14.2-8.2 v-16.4 z"/>
-          <path d="M237.4 52.5 l14.2 8.2 v16.4 l-14.2 8.2 -14.2-8.2 v-16.4 z"/>
-        </g>
-        <g class="beat" style="fill:var(--tone)">
-          <circle cx="76.8" cy="68.9" r="1.9"/><circle cx="69.7" cy="81.2" r="1.9"/><circle cx="55.5" cy="81.2" r="1.9"/>
-          <circle cx="48.4" cy="68.9" r="1.9"/><circle cx="55.5" cy="56.6" r="1.9"/><circle cx="69.7" cy="56.6" r="1.9"/>
-          <circle cx="251.6" cy="68.9" r="1.9"/><circle cx="244.5" cy="81.2" r="1.9"/><circle cx="230.3" cy="81.2" r="1.9"/>
-          <circle cx="223.2" cy="68.9" r="1.9"/><circle cx="230.3" cy="56.6" r="1.9"/><circle cx="244.5" cy="56.6" r="1.9"/>
-        </g>
-        <g class="l" stroke-width="2">
-          <path d="M145.2 82.5 v9 M145.2 100.9 v9 M145.2 119.6 v9"/>
-          <path d="M154.8 46.5 v9 M154.8 28.6 v9 M154.8 9.3 v9"/>
-        </g>
-        <g class="l" stroke-width="1.5">
-          <rect x="88.2" y="3" width="12.2" height="7"/>
-          <rect x="199.6" y="128" width="12.2" height="7"/>
-        </g>
-        <g style="fill:var(--tone)" opacity=".72">
-          <rect x="3" y="1.7" width="11" height="33" rx="2"/>
-          <rect x="3" y="103.3" width="11" height="33" rx="2"/>
-          <rect x="286" y="1.7" width="11" height="33" rx="2"/>
-          <rect x="286" y="103.3" width="11" height="33" rx="2"/>
-        </g>
-        <g style="fill:var(--tone)" opacity=".5">
-          <rect x="82.4" y="49.1" width="2.8" height="3.2"/><rect x="82.4" y="67.3" width="2.8" height="3.2"/><rect x="82.4" y="85.6" width="2.8" height="3.2"/>
-          <rect x="214.8" y="49.1" width="2.8" height="3.2"/><rect x="214.8" y="67.3" width="2.8" height="3.2"/><rect x="214.8" y="85.6" width="2.8" height="3.2"/>
-        </g>
-        <text x="62.6" y="70.8" text-anchor="middle">REEF</text>
-        <text x="135.2" y="105" text-anchor="middle">NET</text>
-        <text x="147" y="45" text-anchor="middle" transform="rotate(-90 147 45)">BARGE</text>
-        <text x="94.3" y="18.5" text-anchor="middle">PROCESSOR</text>
-        <text x="19.5" y="99" text-anchor="middle">STATION</text>
-      </svg>
-      <span class="scale">690 × 317 in, drawn to scale · §5.1–§5.7</span>
-    </div>
-
-    <p class="blurb">
-      The <b>REEF</b> has inventory: 12 BRANCHES on L2, L3 and L4, and a placed CORAL does not grow back.
-      CAGE depth is picked before the MATCH, the ALGAE chain turns the PROCESSOR into a negative-margin
-      business, and a ROBOT can lift a ring into its own NET. That NET is a 12 ft face worked as three 4 ft
-      lanes, and it holds nine rings; on the golden seed each side books 9, 8 of them lifted in by a ROBOT and
-      1 processed. Each alliance runs its own
-      baseline or planner; the planner re-solves through TELEOP against what the REEF actually has left.
-    </p>
-
-    <ul class="chips">
-      <li class="warn">the AUTO and TROUGH rows are not calibrated yet</li>
-      <li class="warn">being served first is worth up to five points here</li>
-      <li>Manual §5–§7</li>
-      <li>both 2025 Einstein Finals rosters preset</li>
-      <li>18 per-ROBOT presets, 9 from the 2025 EPA export</li>
-      <li>shares the 2026 ROBOT physics</li>
-    </ul>
-
-    <div class="nums">
-      <div class="num"><span class="v">237-225</span><span class="k">golden seed, one MATCH<br>blue 156 CORAL + 42 ALGAE + 9 LEAVE + 30 BARGE</span></div>
-      <div class="num"><span class="v">265.4 ± 1.7</span><span class="k">same-roster mirror (blue)<br>n=48 · red 263.5 ± 2.4 · margin 1.85 ± 2.29</span></div>
-      <div class="num"><span class="v">+13.2 ± 2.3</span><span class="k">planner vs shipped baseline<br>n=96 · both seat orders · +7.0 ± 1.7 vs the best fixed rule</span></div>
-    </div>
-
-    <details class="notes">
-      <summary>Before you read those numbers</summary>
-      <ul>
-        <li>The baselines separate: greedy beats a random intent 16/16 MATCHes, margin 130.7 ± 6.1.</li>
-        <li>Every BRANCH still fills and the TROUGH does not: a CORAL has to be lined up before it is pushed and can fall back onto the carpet, which costs an alliance 8.5 ± 1.9 points a MATCH (8.4 CORAL an ALLIANCE-MATCH ends on the carpet, and the trough fills 7.0 of its 24 against 10.3 when nothing can miss).</li>
-        <li>The NET has a second feeder: <code>netScoreSec</code> is a ROBOT property, the shipped trio carries one, and over 16 MATCHes it books 9.5 deposits a MATCH. Both fleets having it is worth 26.4 ± 2.3 points a MATCH <em>less</em> and one side having it is worth a margin of 6.1 ± 4.1 against it, because the rings in your NET are the ones your opponent no longer pushed through their PROCESSOR.</li>
-        <li>Until this round the whole ALLIANCE queued on one point of the 12 ft NET face. It is three 4 ft lanes now and a machine works its own: the spread alone is worth 5.3 ± 3.5 combined points a MATCH (8.2 ± 4.6 on a second seed base) and takes the corner unstick from 17.0 to 14.4 fires a MATCH. The nine-ring ceiling is geometry, not a clause — §6.5.1 counts any ring contacting the NET, so a pile is legal and only the 18 ALGAE a MATCH stages is written down. The ceiling on its own takes 1.29 ± 0.29 rings out of the two NETs and puts 1.00 ± 0.25 of them back through the PROCESSOR, where a ring pays 6 instead of 4.</li>
-        <li>Defense is chosen by the planner now, not assigned by a checkbox, because the field prices it at nothing: one forced pressing seat costs its own ALLIANCE 8.1 ± 1.4 points and takes 2.6 ± 1.6 off the opponent's play — a wash — and the 28.83 ± 2.74 it loses of margin is the fouls it hands over, not the shadowing.</li>
-        <li>Named presets: CORAL totals from TBA alliance accounts, split between the three ROBOTs only by Statbotics 2025 EPA ratios. That reproduces Johnson at 56.3 and Newton at 56.0, and nine single machines come from the same export.</li>
-        <li>Drop the PROCESSOR column and the generic three-ROBOT alliance mean is 240.1 against 260.56 over 32 playoff alliance sides.</li>
-        <li>Per-ROBOT tempo is drawn ±20% each MATCH; it widens the mean |margin| by 1.70 ± 0.74 and takes exact ties from 17 to 13 over 288 paired seeds. The shipped fingerprint is 95531e05, and the off values have to hand back the builds they came from: 1bee40b6 with no tempo spread, f32cee33 with no placement model, 86ddb30e with neither, and the four digests from before the NET lanes come back with <code>netLaneSpread</code> and <code>netCapacity</code> both off.</li>
-        <li>The planner searches the climb window, the ALGAE duty and the CORAL STATION queue, and pins four budget rules the baseline leaves off: a cycle needs 4 s of clock to spare, the hopper is spent before the CAGE, a piece a teammate is bound for costs 1.82 s of drive, and a press is priced at 0.08 a second. The first three are worth 17.31 combined points a MATCH over 48 paired seeds, 7.23 of it CORAL and 0.83 ALGAE. It beats the shipped baseline — +13.2 ± 2.3 and +7.6 ± 2.4 from the two seats, +16.3 ± 2.4 and +7.1 ± 2.6 on a second seed base — and it beats the best fixed rule by +7.0 ± 1.7 and +7.5 ± 2.3; but on this seed construction being served first is worth up to five points on its own, so both seat orders are printed and the re-plan itself still earns nothing separable.</li>
-        <li>Open: the NET's nine-ring ceiling is an estimate off the mesh, not a clause; exact station / PROCESSOR / CORAL-MARK insets, L1 capacity, HUMAN PLAYER throw rate and accuracy, CHUTE feed time, AUTO plan row count; and the two ledger rows the 2025 finals put well above this build, AUTO CORAL and the TROUGH.</li>
-      </ul>
-    </details>
-
-    <a class="go" href="https://frc-reefscape-tactics-0ssdesrlvzc.qoder.zone/" target="_blank" rel="noopener">
-      Open the 2025 REEFSCAPE console <small>new tab</small><span class="arrow">→</span>
+    <a class="go reefscape reveal" style="--d:.18s" href="https://frc-reefscape-tactics-0ssdesrlvzc.qoder.zone/" target="_blank" rel="noopener">
+      <span class="yr">2025</span>
+      <span class="name"><b>REEFSCAPE</b><em>Stock the <i>REEF</i> · clear the <i>PROCESSOR</i> · cage depth</em></span>
+      <span class="arrow" aria-hidden="true">&rarr;</span>
     </a>
-  </article>
-
-</section>
-
-<section class="band reveal" style="--d:.24s">
-  <h2>Four rules both seasons follow</h2>
-  <ul class="rules">
-    <li><b>Clause beside the constant</b>Every value sits next to its manual clause. Where the manual contradicts itself, the choice is a switch on the page — never a silent pick.</li>
-    <li><b>Mirror means one roster on both sides</b>Three identical ROBOTs each alliance, seats swapped every other MATCH. That turns a strategy comparison into a ROBOT comparison; an earlier layout faked a 60-point field asymmetry by getting this wrong.</li>
-    <li><b>Every physics knob has an off value</b>A new mechanism ships as an ablatable experiment arm, not a new default. Paired arms run on the same seeds; unpaired mean differences carry seed variance.</li>
-    <li><b>Quote n and the standard error</b>A single mirror MATCH is ±2%; a 96-MATCH arm is about ±5 win points. A win-rate change smaller than its error bar is not a result.</li>
-  </ul>
-</section>
+  </nav>
 
 </main>
 
-<footer class="reveal" style="--d:.3s">
-  <div class="src">
-    <span>This domain <code>xploresim.salmoncat0304.xyz</code> → GitHub Pages. It signposts only; the content lives on the two season pages.</span>
-    <a href="https://github.com/CaryWang1234/XploreSim_dev" target="_blank" rel="noopener">2026 source</a>
-    <span>2025 source not public yet</span>
-  </div>
-  <span>Calibration data: The Blue Alliance <code>2026cmptx</code> · updated 2026-10-12</span>
-</footer>
-
-</div>
 </body>
 </html>
