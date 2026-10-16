@@ -68,11 +68,42 @@ body {
   position: absolute;
   inset: -45% -45%;
   background-image:
-    linear-gradient(to right, rgba(150, 168, 190, .17) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(150, 168, 190, .17) 1px, transparent 1px);
-  background-size: 92px 92px;
+    linear-gradient(to right, rgba(150, 168, 190, .3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(150, 168, 190, .3) 1px, transparent 1px),
+    linear-gradient(to right, rgba(150, 168, 190, .13) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(150, 168, 190, .13) 1px, transparent 1px);
+  background-size: 276px 276px, 276px 276px, 92px 92px, 92px 92px;
   will-change: transform;
   animation: roll 7s linear infinite;
+}
+
+/* Robot paths: streaks that run down the carpet plane, one tile ahead of the grid. */
+.lanes {
+  position: absolute;
+  inset: -45% -45%;
+  transform: rotateX(74deg);
+}
+.run {
+  position: absolute;
+  left: var(--x);
+  top: -30%;
+  width: 2px;
+  height: 26%;
+  background: linear-gradient(to bottom, transparent, var(--c), transparent);
+  animation: dash var(--t) linear infinite;
+  animation-delay: var(--s);
+}
+
+/* Where the carpet ends. */
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 24%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 6%, rgba(201, 164, 92, .55) 34%, rgba(92, 207, 208, .55) 68%, transparent 94%);
+  box-shadow: 0 0 26px 5px rgba(150, 190, 210, .15);
+  animation: glint 8s ease-in-out infinite;
 }
 
 .glow {
@@ -213,8 +244,27 @@ body {
   translate: -50% -50%;
   width: min(1180px, 96%);
   height: min(66vh, 560px);
-  background: radial-gradient(58% 62% at 50% 50%, rgba(196, 220, 255, .11), rgba(196, 220, 255, 0) 72%);
+  background:
+    radial-gradient(58% 62% at 50% 50%, rgba(196, 220, 255, .11), rgba(196, 220, 255, 0) 72%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(150, 168, 190, .055) 0 1px, transparent 1px 92px);
   animation: breathe 9s ease-in-out infinite alternate;
+}
+/* Radar: one sweep per pass, cyan ahead of it and khaki behind, so the two seasons share the dial. */
+.stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(880px, 112%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba(92, 207, 208, .14) 0deg, rgba(92, 207, 208, 0) 44deg,
+    rgba(201, 164, 92, 0) 178deg, rgba(201, 164, 92, .12) 222deg, rgba(201, 164, 92, 0) 266deg,
+    rgba(92, 207, 208, 0) 360deg);
+  filter: blur(26px);
+  animation: spin 22s linear infinite;
 }
 
 .entries {
@@ -309,6 +359,17 @@ body {
   from { transform: rotateX(74deg) translateY(0); }
   to { transform: rotateX(74deg) translateY(92px); }
 }
+@keyframes dash {
+  0% { transform: translateY(-70%); opacity: 0; }
+  14% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(430%); opacity: 0; }
+}
+@keyframes glint {
+  0%, 100% { opacity: .45; transform: scaleX(.93); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+@keyframes spin { to { rotate: 360deg; } }
 @keyframes drift-a { to { transform: translate3d(8vw, 5vh, 0) scale(1.14); } }
 @keyframes drift-b { to { transform: translate3d(-9vw, 7vh, 0) scale(1.1); } }
 @keyframes sweep {
@@ -348,7 +409,16 @@ body {
 <body>
 
 <div class="bg" aria-hidden="true">
-  <div class="floor"><div class="grid"></div></div>
+  <div class="floor">
+    <div class="grid"></div>
+    <div class="lanes">
+      <i class="run" style="--x:40%;--c:rgba(201, 164, 92, .95);--t:6.5s;--s:-1.4s"></i>
+      <i class="run" style="--x:49%;--c:rgba(92, 207, 208, .95);--t:8.4s;--s:-5.2s"></i>
+      <i class="run" style="--x:58%;--c:rgba(201, 164, 92, .8);--t:7.2s;--s:-3.1s"></i>
+      <i class="run" style="--x:67%;--c:rgba(92, 207, 208, .8);--t:9.6s;--s:-7.8s"></i>
+    </div>
+  </div>
+  <span class="horizon"></span>
   <span class="glow warm"></span>
   <span class="glow cool"></span>
   <span class="beam"></span>
