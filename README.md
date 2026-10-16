@@ -42,4 +42,5 @@ GitHub 看到 CNAME 文件后自动签发 HTTPS 证书。仓库设置里 Enforce
 `class="card"`／`class="num"` 就报错，防止带数字的卡片被重新搬回首页。
 
 页面正文只写英文，`npm run check` 里有一条 CJK 守卫盯这件事。背景全部用 CSS 画：底部的透视网格是赛场地毯，
-左上与右上的两团辉光是红蓝 alliance 色，`prefers-reduced-motion` 下所有动画一律关掉。
+左上与右上的两团辉光分别取两个赛季的颜色（2026 土黄 `#c9a45c`、2025 青 `#5ccfd0`），这两个是全页仅有的强调色，
+`prefers-reduced-motion` 下所有动画一律关掉。
