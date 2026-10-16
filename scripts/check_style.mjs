@@ -1,6 +1,6 @@
-// CSS/markup cross-check: brace balance in the inline <style>, plus the two directions
-// of a broken stylesheet — a rule that targets nothing, and a class the markup uses but
-// nothing styles. Run: node scripts/check_style.mjs
+// CSS/markup cross-check: brace balance in the inline <style>, the two directions of a broken
+// stylesheet (a rule that targets nothing, a class the markup uses but nothing styles), and whether
+// the decorative overlays above the entries still let clicks through. Run: node scripts/check_style.mjs
 import { readFile } from 'node:fs/promises';
 import { strict as assert } from 'node:assert';
 
@@ -18,6 +18,14 @@ for (const f of ['index.html', '404.html']) {
     assert.equal(style.split('{').length, style.split('}').length, 'unbalanced { }');
     assert.ok(!/;;/.test(style), 'double semicolon');
     assert.ok(!/:\s*;/.test(style), 'empty declaration value');
+  });
+
+  check(`${f}: overlays above the entries do not swallow clicks`, () => {
+    // The pool and the radar are absolutely positioned inside .stage, so they paint over the two
+    // entry bars and would eat every click landing on them. Each one has to opt out of hit-testing.
+    for (const m of style.matchAll(/(\.stage::(?:before|after))\s*\{([^}]*)\}/g)) {
+      assert.match(m[2], /pointer-events:\s*none/, `${m[1]} covers the buttons without pointer-events: none`);
+    }
   });
 
   check(`${f}: every class rule targets markup that exists`, () => {
