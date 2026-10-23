@@ -196,23 +196,6 @@ body {
   text-transform: none;
   color: var(--faint);
 }
-.hub {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid var(--rebuilt);
-  position: relative;
-  flex: none;
-}
-.hub::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-  background: var(--rebuilt);
-  animation: pulse 2.6s ease-in-out infinite;
-}
-
 .host {
   grid-column: 3;
   justify-self: end;
@@ -246,29 +229,10 @@ body {
   height: min(66vh, 560px);
   background:
     radial-gradient(58% 62% at 50% 50%, rgba(196, 220, 255, .11), rgba(196, 220, 255, 0) 72%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(150, 168, 190, .055) 0 1px, transparent 1px 92px);
+    repeating-radial-gradient(circle at 50% 50%, rgba(150, 168, 190, .045) 0 1px, transparent 1px 92px);
   animation: breathe 9s ease-in-out infinite alternate;
   pointer-events: none;
 }
-/* Radar: one sweep per pass, cyan ahead of it and khaki behind, so the two seasons share the dial. */
-.stage::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: min(880px, 112%);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg,
-    rgba(92, 207, 208, .14) 0deg, rgba(92, 207, 208, 0) 44deg,
-    rgba(201, 164, 92, 0) 178deg, rgba(201, 164, 92, .12) 222deg, rgba(201, 164, 92, 0) 266deg,
-    rgba(92, 207, 208, 0) 360deg);
-  filter: blur(26px);
-  animation: spin 22s linear infinite;
-  pointer-events: none;
-}
-
 .entries {
   position: relative;
   z-index: 1;
@@ -373,7 +337,6 @@ body {
   0%, 100% { opacity: .45; transform: scaleX(.93); }
   50% { opacity: 1; transform: scaleX(1); }
 }
-@keyframes spin { to { rotate: 360deg; } }
 @keyframes drift-a { to { transform: translate3d(8vw, 5vh, 0) scale(1.14); } }
 @keyframes drift-b { to { transform: translate3d(-9vw, 7vh, 0) scale(1.1); } }
 @keyframes sweep {
@@ -389,7 +352,7 @@ body {
   85% { opacity: .5; }
   100% { transform: translateY(-88vh) scale(1.1); opacity: 0; }
 }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
 @keyframes breathe { from { opacity: .5; scale: .93; } to { opacity: 1; scale: 1.07; } }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
@@ -438,7 +401,7 @@ body {
 </div>
 
 <header class="bar reveal">
-  <span class="mark"><span class="hub" aria-hidden="true"></span>XploreSim<em>FRC match simulators</em></span>
+  <span class="mark">XploreSim<em>FRC match simulators</em></span>
   <span class="host">xploresim.salmoncat0304.xyz</span>
 </header>
 
