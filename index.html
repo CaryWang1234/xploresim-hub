@@ -252,7 +252,7 @@ body {
   color: var(--text);
   text-decoration: none;
   overflow: hidden;
-  transition: transform .3s cubic-bezier(.2, .8, .2, 1), border-color .3s, box-shadow .3s;
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), border-color .3s;
 }
 .go::before {
   content: "";
@@ -260,7 +260,6 @@ body {
   inset: 0 auto 0 0;
   width: 3px;
   background: var(--tone);
-  box-shadow: 0 0 14px var(--tone);
 }
 .go::after {
   content: "";
@@ -274,7 +273,6 @@ body {
 .go:hover, .go:focus-visible {
   transform: translateY(-2px);
   border-color: var(--tone);
-  box-shadow: 0 14px 30px -20px var(--tone);
 }
 .go:hover::after, .go:focus-visible::after { transform: translateX(110%); }
 .go:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
